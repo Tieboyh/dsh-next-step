@@ -13,6 +13,7 @@
 [![查看插件演示](media/zh/demo-zh.gif)](https://github.com/Tieboyh/dsh-next-step/releases/download/v0.2.0/promo-zh.mp4)
 
 - **建议就在输入框里**：沿用原生字体和行高，不额外占一块面板。
+- **一键优化提示词**：写好草稿后，点击魔法棒图标优化表述，保留原意；结果仍可编辑，不自动发送。
 - **Tab 接受**：灰字变为普通草稿，不会自动发送。
 - **Esc 忽略**：随时写自己的下一条消息。
 - **草稿优先**：开始输入、有附件、有排队消息或开启新一轮时，建议隐藏。
@@ -29,7 +30,7 @@
 
 无需编译，无运行时 npm 依赖。
 
-**桌面端：**下载[源码压缩包](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.2.1.zip)，解压后，在 DSH 插件管理页添加该插件目录。
+**桌面端：**下载[源码压缩包](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.3.0.zip)，解压后，在 DSH 插件管理页添加该插件目录。
 
 macOS 也可以使用桌面应用自带的 CLI：
 
@@ -41,10 +42,16 @@ macOS 也可以使用桌面应用自带的 CLI：
 **Web 端：**直接安装固定版本：
 
 ```sh
-dsh plugin --profile web add 'dsh-next-step@github:Tieboyh/dsh-next-step#v0.2.1'
+dsh plugin --profile web add 'dsh-next-step@github:Tieboyh/dsh-next-step#v0.3.0'
 ```
 
 本地开发可改用 `link:/absolute/path/to/dsh-next-step`。插件自带 bundle patch，会自动注册；无法热加载的环境刷新或重启 DSH 即可。
+
+## 优化当前草稿
+
+点击输入框工具栏的魔法棒图标，即可沿用已配置模型优化提示词。请求只发送当前草稿，结果填回输入框，不自动发送。等待期间输入、发送、切换会话或停用插件，迟到的结果不会覆盖新内容；失败时保留原草稿。
+
+空草稿、超过 12,000 字符的草稿、会话运行中，以及含结构化文件/会话引用的草稿会禁用图标。独立附件会保留。每次点击都会额外调用模型，正常消耗对应服务的额度。
 
 ## 快捷键
 
@@ -83,13 +90,14 @@ dsh plugin --profile web add 'dsh-next-step@github:Tieboyh/dsh-next-step#v0.2.1'
 
 ```sh
 npm run build  # JavaScript 语法检查
-npm test       # 13 项行为测试
+npm test       # 23 项行为测试
 npm pack
 ```
 
 - `index.js`：受 Connection 认证保护的 Fetch RPC，支持桌面 IPC 与 Web HTTP。
 - `engine.js`：上下文筛选、模型请求、去重及失效检查。
-- `client.js`：原生客户端模块与输入框灰字提示。
+- `client.js`：原生客户端模块、灰字建议和提示词优化图标。
+- `optimizer.js`：仅针对草稿的改写、取消与输出校验。
 
 宣传截图和视频使用**真实 DSH 前端与本插件**，会话及模型响应为固定演示数据，不代表真实模型的预测质量。详见[素材说明](docs/MEDIA.md)。
 

@@ -1,7 +1,7 @@
 {
   "name": "dsh-next-step",
-  "version": "0.2.1",
-  "description": "Next-message predictions for the local DeepSeek Harness desktop and web composer",
+  "version": "0.3.0",
+  "description": "Inline next-message predictions and one-click prompt improvement for DeepSeek Harness",
   "type": "module",
   "license": "MIT",
   "exports": {
@@ -18,10 +18,11 @@
     "README.md",
     "tests",
     "README.zh-CN.md",
-    "LICENSE"
+    "LICENSE",
+    "optimizer.js"
   ],
   "scripts": {
-    "build": "node --check index.js && node --check engine.js && node --check client.js",
+    "build": "node --check index.js && node --check engine.js && node --check optimizer.js && node --check client.js",
     "test": "node --test tests/*.test.js"
   },
   "dsh": {

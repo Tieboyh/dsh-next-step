@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0
+
+- Add a magic-wand icon to improve the current prompt draft with one click.
+- Preserve intent, language, and explicit constraints; never send the result automatically.
+- Guard draft revisions, cancel requests after edits or session changes, and keep the original draft on errors.
+- Support the first unsent prompt using the configured default model; retain separate attachments.
+
+新增提示词优化图标：点击即可优化当前草稿。保留原意，不自动发送；保护等待期间的新输入，失败时保留原稿。
+
 ## 0.2.1
 
 - Remove the composer toggle and its independent local-storage preference.

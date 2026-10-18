@@ -16,7 +16,7 @@ The provider is not included in the distributed plugin. Normal installations cal
 
 The promotional films use edited crops of those screenshots, title cards, crossfades, and keyboard callouts. They are screenshot-based product films, not continuous desktop recordings. The original screenshot files are preserved without annotations or retouching. The sound consists of simple synthesized chimes created for this project, with no third-party music or voice-over.
 
-No private conversations, account credentials, API keys, or local authentication URLs are included. These assets show v0.2.0. Version 0.2.1 removes the composer toggle visible in the screenshots; predictions are now controlled only by enabling or disabling the plugin.
+No private conversations, account credentials, API keys, or local authentication URLs are included. These assets show v0.2.0. Version 0.2.1 removes the composer toggle visible in the screenshots; predictions are now controlled only by enabling or disabling the plugin. Version 0.3.0 adds a prompt-improvement icon that is not shown in these older assets.
 
 ## Re-render the films
 
@@ -34,7 +34,7 @@ The renderer uses the screenshot files under `media/en` and `media/zh`. On platf
 
 演示用模型未随插件发布。正常使用时，插件调用用户在 DSH 中配置的模型服务，并消耗该服务对应的额度。
 
-现有素材展示 v0.2.0；v0.2.1 已删除图中输入框旁的独立开关，建议只随插件启用或停用。
+现有素材展示 v0.2.0；v0.2.1 已删除图中输入框旁的独立开关，建议只随插件启用或停用。v0.3.0 新增的提示词优化图标未包含在这些旧版素材中。
 
 音效为本项目合成的简单提示音，没有第三方音乐或配音。素材中不包含私人聊天、凭据或本地认证链接。
 

@@ -13,6 +13,7 @@ A community plugin for **DeepSeek Harness desktop and web**. After a reply finis
 [![Watch the demo](media/en/demo-en.gif)](https://github.com/Tieboyh/dsh-next-step/releases/download/v0.2.0/promo-en.mp4)
 
 - **Inline suggestions:** same composer, same font, no extra suggestion panel.
+- **One-click prompt improvement:** write a draft, then click the magic-wand icon to clarify its wording while preserving your intent. Review and edit the result before sending.
 - **Tab to accept:** the prediction becomes a normal draft. It does not send itself.
 - **Esc to dismiss:** keep writing your own message.
 - **Your draft comes first:** typing, attachments, queued messages, and a new turn hide the prediction.
@@ -29,7 +30,7 @@ A community plugin for **DeepSeek Harness desktop and web**. After a reply finis
 
 No build step or runtime npm dependencies are required.
 
-**Desktop:** download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.2.1.zip), extract it, and add the extracted plugin directory from DSH's plugin manager.
+**Desktop:** download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.3.0.zip), extract it, and add the extracted plugin directory from DSH's plugin manager.
 
 On macOS, the desktop app's bundled CLI also supports a local directory:
 
@@ -41,10 +42,16 @@ On macOS, the desktop app's bundled CLI also supports a local directory:
 **Web:** install the tagged GitHub version:
 
 ```sh
-dsh plugin --profile web add 'dsh-next-step@github:Tieboyh/dsh-next-step#v0.2.1'
+dsh plugin --profile web add 'dsh-next-step@github:Tieboyh/dsh-next-step#v0.3.0'
 ```
 
 For local development, use `link:/absolute/path/to/dsh-next-step` instead. The bundle patch registers the plugin automatically. Reload or restart DSH if your environment does not apply plugin changes live.
+
+## Improve a draft
+
+Click the magic-wand icon beside the composer controls. The request uses your configured model and sends only the current draft. The result replaces the draft without sending it. If you edit, send, switch sessions, or disable the plugin while a request is pending, its result cannot overwrite your new text. Errors preserve the original draft.
+
+The icon is disabled for empty drafts, drafts over 12,000 characters, active turns, and drafts containing structured file/session reference chips. Separate attachments are retained. Each click makes an additional model request and uses the service’s normal quota or billing.
 
 ## Keyboard
 
@@ -83,13 +90,14 @@ Verified with **macOS DSH desktop 0.2.1-rc.2**. The media demo uses the matching
 
 ```sh
 npm run build  # JavaScript syntax checks
-npm test       # 13 behavior tests
+npm test       # 23 behavior tests
 npm pack
 ```
 
 - `index.js`: authenticated Connection Fetch RPC, shared by desktop IPC and web HTTP.
 - `engine.js`: context selection, model call, deduplication, and invalidation.
-- `client.js`: native DSH client module and composer ghost text.
+- `client.js`: native DSH client module, composer ghost text, and prompt-improvement icon.
+- `optimizer.js`: draft-only rewriting, cancellation, and output validation.
 
 The screenshots and videos use the **actual DSH frontend and this plugin**, with a scripted demo provider and synthetic conversations. They are not evidence of live-model prediction quality. See [media provenance](docs/MEDIA.md).
 
