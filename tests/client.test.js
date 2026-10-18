@@ -167,3 +167,40 @@ test('optimization errors preserve the draft; unmounting prevents a late replace
   resolve({ ok: true, value: { prompt: '不该写入' } }); await pending;
   assert.equal(other.input.draft, '切换前'); assert.equal(other.requests[0].signal.aborted, true);
 });
+
+test('optimizer explains failures, keeps drafts editable and never displays raw provider messages', async () => {
+  for (const [error, expected] of [
+    [{ code: 'timeout', details: { timeoutMs: 25000 } }, /超时（25 秒）/],
+    [{ code: 'missing-model' }, /配置可用模型/],
+    [{ code: 'authentication-failed', details: { status: 401 } }, /认证失败.*HTTP 401/],
+    [{ code: 'quota-exceeded' }, /额度已用尽/],
+    [{ code: 'rate-limited' }, /请求过于频繁/],
+    [{ code: 'service-unavailable' }, /服务暂时不可用/],
+    [{ code: 'request-rejected' }, /拒绝了请求/],
+    [{ code: 'network-error' }, /网络或代理/],
+    [{ code: 'output-truncated' }, /输出被截断/],
+    [{ code: 'empty-output' }, /未返回优化文本/],
+    [{ code: 'invalid-output' }, /格式不符合要求/],
+    [{ code: 'incomplete-output' }, /未完整返回/],
+    [{ code: 'context-exceeded' }, /上下文限制/],
+    [{ code: 'request-interrupted' }, /被中断/],
+    [{ code: '__proto__' }, /优化请求失败/],
+  ]) {
+    const m = mount(Promise.resolve({ ok: false, error: { ...error, message: 'secret provider response' } }), 'dsh-optimize-prompt');
+    m.input.draft = '请保留原草稿';
+    await m.render().props.onClick();
+    assert.equal(m.input.draft, '请保留原草稿'); assert.equal(m.sends(), 0);
+    assert.match(m.notices[0].text, expected); assert.match(m.notices[0].text, /原草稿已保留/);
+    assert.doesNotMatch(m.notices[0].text, /secret/);
+    assert.equal(m.render().props.disabled, false); m.dispose();
+  }
+});
+
+test('transport failures are actionable and deliberate cancellation stays silent', async () => {
+  const m = mount(Promise.reject(new Error('private transport payload')), 'dsh-optimize-prompt'); m.input.draft = '保留';
+  await m.render().props.onClick();
+  assert.match(m.notices[0].text, /与 DSH 的通信/); assert.doesNotMatch(m.notices[0].text, /private/);
+  assert.equal(m.input.draft, '保留'); assert.equal(m.render().props.disabled, false); m.dispose();
+  const cancelled = mount(Promise.resolve({ ok: false, error: { code: 'cancelled' } }), 'dsh-optimize-prompt'); cancelled.input.draft = '保留';
+  await cancelled.render().props.onClick(); assert.equal(cancelled.notices.length, 0); cancelled.dispose();
+});

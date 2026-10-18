@@ -102,6 +102,36 @@ window.__ModuleLoader__.load({
       // is CSS-generated text, never a Lexical document node or draft content.
       return h('span', { ref: root, hidden: true, 'data-dsh-next-step-anchor': sessionId });
     }
+    function notifyOptimizationFailure(notify, error) {
+      const code = error?.code;
+      if (code === 'cancelled') return;
+      const messages = {
+        'missing-model': '尚未配置可用模型，请先在 DSH 中选择模型。',
+        'authentication-failed': '模型服务认证失败，请检查该服务的登录状态或 API Key。',
+        'quota-exceeded': '模型服务额度已用尽，请检查账户额度或更换模型服务。',
+        'rate-limited': '模型请求过于频繁，请稍后重试。',
+        'service-unavailable': '模型服务暂时不可用，请稍后重试。',
+        'request-rejected': '模型服务拒绝了请求，请检查模型及服务配置。',
+        'network-error': '无法连接模型服务，请检查网络或代理后重试。',
+        'output-truncated': '模型输出被截断，请缩短草稿后重试。',
+        'empty-output': '模型未返回优化文本，请重试或更换模型。',
+        'invalid-output': '模型返回格式不符合要求，请重试或更换模型。',
+        'incomplete-output': '模型未完整返回结果，请重试。',
+        'context-exceeded': '草稿超出当前模型的上下文限制，请缩短后重试。',
+        'request-interrupted': '模型请求被中断，请稍后重试。',
+        'invalid-prompt': '请输入 1–12000 字符的非空草稿。',
+        'invalid-session': '当前会话无效，请重新打开会话后重试。',
+        'request-failed': '模型请求失败，请检查服务状态后重试。',
+        'connection-error': '未能完成与 DSH 的通信，请稍后重试。',
+      };
+      const timeoutMs = error?.details?.timeoutMs;
+      const message = code === 'timeout'
+        ? `模型响应超时${Number.isFinite(timeoutMs) && timeoutMs > 0 && timeoutMs <= 60000 ? `（${Math.ceil(timeoutMs / 1000)} 秒）` : ''}，请稍后重试。`
+        : (Object.hasOwn(messages, code) ? messages[code] : '优化请求失败，请稍后重试。');
+      const status = error?.details?.status;
+      const detail = Number.isInteger(status) && status >= 400 && status <= 599 ? `（HTTP ${status}）` : '';
+      notify('error', `${message}${detail}原草稿已保留。`);
+    }
     function PromptOptimizer({ sessionId, useSession, useInput, inputActions, optimize, getInput, focusInput, notify }) {
       const running = useSession(s => s.running);
       const pending = useSession(s => s.pendingSubmissions.length > 0);
@@ -130,8 +160,8 @@ window.__ModuleLoader__.load({
         try {
           const result = await optimize(sessionId, before.draft, active.controller.signal);
           if (request.current !== active || active.controller.signal.aborted) return;
-          if (!result.ok || typeof result.value?.prompt !== 'string' || !result.value.prompt.trim()) {
-            notify('error', '提示词优化失败，原草稿已保留。'); return;
+          if (!result?.ok || typeof result.value?.prompt !== 'string' || !result.value.prompt.trim()) {
+            notifyOptimizationFailure(notify, result?.ok ? { code: 'invalid-output' } : result?.error); return;
           }
           const current = getInput();
           if (current.draftRev !== active.revision || current.draft !== active.draft || current.phase !== 'plain' || current.occurrences.length > 0) {
@@ -140,7 +170,7 @@ window.__ModuleLoader__.load({
           inputActions.setDraft(result.value.prompt);
           focusInput();
         } catch {
-          if (request.current === active && !active.controller.signal.aborted) notify('error', '提示词优化失败，原草稿已保留。');
+          if (request.current === active && !active.controller.signal.aborted) notifyOptimizationFailure(notify, { code: 'connection-error' });
         } finally {
           if (request.current === active) { request.current = null; setBusy(false); }
         }

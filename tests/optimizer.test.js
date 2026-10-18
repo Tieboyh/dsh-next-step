@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createPromptOptimizer, parseOptimizedPrompt } from '../optimizer.js';
+import { createPromptOptimizer, parseOptimizedPrompt, optimizationFailure } from '../optimizer.js';
 import { apply } from '../index.js';
 function fixture(stream, live = true) {
   const requests = [];
@@ -37,7 +37,88 @@ test('invalid drafts are refused before model calls; malformed or truncated outp
   assert.equal(parseOptimizedPrompt('{"prompt":3}'), ''); assert.equal(parseOptimizedPrompt('not json'), '');
   assert.equal(parseOptimizedPrompt(JSON.stringify({ prompt: 'x'.repeat(16001) })), '');
   const bad = fixture(async function* () { yield { type: 'text-delta', text: '{"prompt":"partial"}' }; yield { type: 'finish', reason: { kind: 'max-tokens' } }; });
-  const p = createPromptOptimizer(bad.ctx); await assert.rejects(p.optimize('test','draft'), /incomplete-output/); p.dispose();
+  const p = createPromptOptimizer(bad.ctx); await assert.rejects(p.optimize('test','draft'), /output-truncated/); p.dispose();
+});
+
+test('provider failures preserve useful status while excluding raw error text and request data', () => {
+  for (const [status, code] of [[401, 'authentication-failed'], [403, 'authentication-failed'], [429, 'rate-limited'], [503, 'service-unavailable'], [400, 'request-rejected']]) {
+    const error = new Error('secret token / private draft / https://private-service');
+    error.cause = { status, request: { headers: { authorization: 'secret' } } };
+    assert.deepEqual(optimizationFailure(error), { code, message: code, details: { status } });
+  }
+  const network = new Error('private host'); network.cause = { code: 'ECONNREFUSED' };
+  assert.equal(optimizationFailure(network).code, 'network-error');
+  const cycle = new Error('secret'); cycle.cause = cycle;
+  assert.deepEqual(optimizationFailure(cycle), { code: 'request-failed', message: 'request-failed', details: {} });
+});
+
+test('missing model, empty output, invalid JSON and incomplete streams remain distinguishable', async () => {
+  const missing = fixture(good, false); missing.ctx.get = () => undefined;
+  await assert.rejects(createPromptOptimizer(missing.ctx).optimize('new', 'draft'), { code: 'missing-model' });
+  for (const [text, finish, expected] of [['', 'stop', 'empty-output'], ['not json', 'stop', 'invalid-output'], ['{"prompt":"draft"}', undefined, 'incomplete-output']]) {
+    const f = fixture(async function* () {
+      yield { type: 'text-delta', text };
+      if (finish) yield { type: 'finish', reason: { kind: finish } };
+    });
+    const optimizer = createPromptOptimizer(f.ctx);
+    await assert.rejects(optimizer.optimize('test', 'draft'), { code: expected });
+    optimizer.dispose();
+  }
+});
+
+test('timeout is distinguished from cancellation, including a provider returning after abort', async () => {
+  const f = fixture(async function* (o) {
+    await new Promise(resolve => o.signal.addEventListener('abort', resolve, { once: true }));
+    yield* good();
+  });
+  const optimizer = createPromptOptimizer(f.ctx, { timeoutMs: 1000 });
+  await assert.rejects(optimizer.optimize('test', 'draft'), error => {
+    assert.deepEqual(optimizationFailure(error), { code: 'timeout', message: 'timeout', details: { timeoutMs: 1000 } });
+    return true;
+  });
+  optimizer.dispose();
+  const cancelled = createPromptOptimizer(f.ctx), abort = new AbortController();
+  const pending = cancelled.optimize('test', 'draft', abort.signal); abort.abort();
+  await assert.rejects(pending, { code: 'cancelled' }); cancelled.dispose();
+});
+
+test('RPC forwards classified failures without private provider details', async () => {
+  const f = fixture(async function* () {
+    const error = new Error('secret API key and private draft'); error.status = 401; throw error;
+  });
+  let route; const disposers = [];
+  Object.assign(f.ctx, { on() {}, effect(fn) { disposers.push(fn()); }, connection: { fetch: { register(r) { route = r; } } } });
+  apply(f.ctx);
+  const response = await route.fetch(new Request('http://local/api/dsh-next-step', {
+    method: 'POST', body: JSON.stringify({ type: 'client-request', rpcId: 'failure', method: 'dsh-next-step', payload: { sessionId: 'test', action: 'optimize', draft: 'private draft' } }),
+  }));
+  assert.deepEqual(await response.json(), { type: 'server-response', rpcId: 'failure', result: { ok: false, error: { code: 'authentication-failed', message: 'authentication-failed', details: { status: 401 } } } });
+  for (const dispose of disposers) dispose?.();
+});
+
+test('actual DSH terminal failure chunks retain their classification and never use partial output', async () => {
+  for (const [code, expected] of [
+    ['AUTH', 'authentication-failed'], ['MISSING_CREDENTIAL', 'authentication-failed'],
+    ['INVALID_CREDENTIAL', 'authentication-failed'], ['QUOTA', 'quota-exceeded'],
+    ['ACCOUNT_QUOTA', 'quota-exceeded'], ['RATE_LIMIT', 'rate-limited'],
+    ['NO_ADAPTER', 'missing-model'], ['UNKNOWN_MODEL', 'missing-model'],
+    ['UNKNOWN_PROVIDER', 'missing-model'], ['INVALID_CONFIG', 'missing-model'],
+    ['SERVER', 'service-unavailable'], ['TIMEOUT', 'timeout'],
+    ['TRANSPORT', 'network-error'], ['INVALID_REQUEST', 'request-rejected'],
+    ['CONTEXT_WINDOW_EXCEEDED', 'context-exceeded'], ['EMPTY_RESPONSE', 'empty-output'],
+    ['ABORTED', 'request-interrupted'], ['UNKNOWN', 'request-failed'],
+  ]) {
+    const f = fixture(async function* () {
+      yield { type: 'text-delta', text: '{"prompt":"must not replace the draft"}' };
+      yield { type: 'finish', reason: { kind: code === 'ABORTED' ? 'aborted' : 'error', failure: { code, message: 'secret from service' } } };
+    });
+    const optimizer = createPromptOptimizer(f.ctx);
+    await assert.rejects(optimizer.optimize('test', 'draft'), error => {
+      assert.deepEqual(optimizationFailure(error), { code: expected, message: expected, details: {} }); return true;
+    });
+    optimizer.dispose();
+  }
+  assert.equal(optimizationFailure({ code: 'QUOTA', status: 429 }).code, 'quota-exceeded');
 });
 test('caller cancellation and plugin disposal abort pending optimization', async () => {
   for (const dispose of [false, true]) {

@@ -34,7 +34,7 @@ The improvement screen comes from v0.3.0 verification. Prediction text details a
 
 No build step or runtime npm dependencies are required.
 
-1. Download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.3.0.zip) and extract it.
+1. Download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.3.1.zip) and extract it.
 2. Add the extracted plugin directory in DSH’s **Plugin Manager**.
 3. Enable **dsh-next-step** there. Use the same manager to disable it.
 
@@ -43,6 +43,8 @@ Both features follow the plugin state, with no separate composer toggle. Reload 
 ## Improve a draft
 
 Click the magic-wand icon beside the composer controls. The request uses your configured model and sends only the current draft. The result replaces the draft without sending it. If you edit, send, switch sessions, or disable the plugin while a request is pending, its result cannot overwrite your new text. Errors preserve the original draft.
+
+Failures explain whether the cause is a timeout, missing model, authentication, exhausted quota, rate limiting, network/service errors, or invalid/truncated output. DSH terminal stream failures keep their original error category. Only safe error categories and HTTP status codes are displayed; provider response bodies and credentials are never forwarded. Cancelling by editing or switching sessions stays silent. The plugin adds no retries or extra model requests.
 
 The icon is disabled for empty drafts, drafts over 12,000 characters, active turns, and drafts containing structured file/session reference chips. Separate attachments are retained. Each click makes an additional model request and uses the service’s normal quota or billing.
 
@@ -83,7 +85,7 @@ Verified with **macOS DSH desktop 0.2.1-rc.2**. The media demo uses the matching
 
 ```sh
 npm run build  # JavaScript syntax checks
-npm test       # 23 behavior tests
+npm test       # 30 behavior tests
 npm pack
 ```
 

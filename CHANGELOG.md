@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.1
+
+- Explain prompt-improvement failures with actionable categories, including timeout, model configuration, authentication, quota, rate limit, network, and invalid/truncated output.
+- Preserve errors carried by DSH terminal stream chunks instead of treating every service failure as incomplete output.
+- Distinguish request timeout from deliberate cancellation; keep cancelled requests quiet and preserve draft revision protections.
+- Forward only safe categories and HTTP status codes, never raw provider errors, credentials, or prompt text. No plugin-level retries or additional model calls.
+- Validate with 30 tests, including real DSH failure-envelope shapes and client notifications.
+
+优化失败提示现在会说明具体类别，并正确识别 DSH 流结束事件中的服务错误。区分超时与主动取消，保留原草稿，不泄露服务原始响应或凭据。插件仍只通过 DSH 插件管理启停。
+
 ## 0.3.0
 
 - Add a magic-wand icon to improve the current prompt draft with one click.

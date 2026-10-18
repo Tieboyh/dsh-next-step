@@ -1,5 +1,5 @@
 import { createPredictor } from './engine.js';
-import { createPromptOptimizer, MAX_PROMPT_LENGTH } from './optimizer.js';
+import { createPromptOptimizer, MAX_PROMPT_LENGTH, optimizationFailure } from './optimizer.js';
 
 export const name = 'dsh-next-step';
 export const inject = ['connection', 'sessions', 'llm'];
@@ -33,7 +33,7 @@ export function apply(ctx, options = {}) {
           result = { ok: false, error: { code: 'invalid-prompt', message: 'Enter a prompt of at most 12000 characters', details: {} } };
         } else {
           try { result = { ok: true, value: await optimizer.optimize(sessionId, draft, request.signal) }; }
-          catch { result = { ok: false, error: { code: 'optimize-failed', message: 'Could not optimize the prompt. Your original draft is unchanged.', details: {} } }; }
+          catch (error) { result = { ok: false, error: optimizationFailure(error) }; }
         }
       } else if (body.payload.action === undefined || body.payload.action === 'predict') {
         result = { ok: true, value: await predictor.predict(sessionId) };
