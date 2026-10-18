@@ -134,13 +134,25 @@ test('optimizer replaces only the draft, preserves attachments, blocks duplicate
   m.input.draft = '添加和删除任务，界面简洁'; m.input.draftRev = 1; m.input.attachmentIds = ['file-1'];
   const pending = m.render().props.onClick();
   const button = m.render(); assert.equal(button.props.disabled, true); assert.equal(button.props['aria-busy'], true);
+  assert.equal(button.children[1].children[0], '优化中…');
   await button.props.onClick(); assert.equal(m.calls(), 1);
   assert.equal(m.requests[0].payload.action, 'optimize');
   assert.equal(m.requests[0].payload.draft, '添加和删除任务，界面简洁');
   resolve({ ok: true, value: { prompt: '请实现任务的添加与删除，保持界面简洁。' } }); await pending;
   assert.equal(m.input.draft, '请实现任务的添加与删除，保持界面简洁。');
   assert.deepEqual(m.input.attachmentIds, ['file-1']); assert.equal(m.sends(), 0); assert.equal(m.focus(), 1);
+  assert.equal(m.notices[0].text, '提示词已优化，请确认后发送。');
+  assert.equal(m.notices[0].level, 'info');
   assert.equal(m.render().props['aria-busy'], false); m.dispose();
+});
+
+test('unchanged optimization reports completion without rewriting the draft or incrementing its revision', async () => {
+  const m = mount(Promise.resolve({ ok: true, value: { prompt: '我需要开发一个风格极致独特的网站。' } }), 'dsh-optimize-prompt');
+  m.input.draft = '我需要开发一个风格极致独特的网站。'; m.input.draftRev = 3;
+  await m.render().props.onClick();
+  assert.equal(m.input.draftRev, 3); assert.equal(m.sends(), 0); assert.equal(m.focus(), 1);
+  assert.equal(m.notices[0].text, '模型未建议修改，已保留原文。');
+  assert.equal(m.render().props.disabled, false); m.dispose();
 });
 test('editing the draft aborts optimization and rejects even a late successful result', async () => {
   let resolve; const m = mount(new Promise(r => { resolve = r; }), 'dsh-optimize-prompt');

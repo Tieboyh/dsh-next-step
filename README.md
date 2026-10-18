@@ -34,13 +34,15 @@ The improvement screen comes from v0.3.0 verification. Prediction text details a
 
 No build step or runtime npm dependencies are required.
 
-1. Download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.3.1.zip) and extract it.
+1. Download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.3.2.zip) and extract it.
 2. Add the extracted plugin directory in DSH’s **Plugin Manager**.
 3. Enable **dsh-next-step** there. Use the same manager to disable it.
 
 Both features follow the plugin state, with no separate composer toggle. Reload an updated local installation through Plugin Manager; no separate startup entry point is needed.
 
 ## Improve a draft
+
+The button displays a working label while a request is pending. Completion reports either that the draft was improved or that the model suggested no changes. Identical output leaves the draft and its revision untouched.
 
 Click the magic-wand icon beside the composer controls. The request uses your configured model and sends only the current draft. The result replaces the draft without sending it. If you edit, send, switch sessions, or disable the plugin while a request is pending, its result cannot overwrite your new text. Errors preserve the original draft.
 
@@ -85,7 +87,7 @@ Verified with **macOS DSH desktop 0.2.1-rc.2**. The media demo uses the matching
 
 ```sh
 npm run build  # JavaScript syntax checks
-npm test       # 30 behavior tests
+npm test       # 31 behavior tests
 npm pack
 ```
 

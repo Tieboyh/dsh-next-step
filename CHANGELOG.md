@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.2
+
+- Show a visible working label beside the wand during optimization.
+- Confirm completion for both changed and unchanged model output using DSH-supported info notices.
+- Preserve the draft and revision when the returned text is identical.
+- Verify with 31 behavior tests.
+
+点击后显示“优化中…”，完成后明确提示已优化或模型未建议修改，避免误以为按钮没有响应。
+
 ## 0.3.1
 
 - Explain prompt-improvement failures with actionable categories, including timeout, model configuration, authentication, quota, rate limit, network, and invalid/truncated output.

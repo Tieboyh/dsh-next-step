@@ -14,6 +14,7 @@ window.__ModuleLoader__.load({
 .dsh-optimize-prompt:disabled{opacity:.4;cursor:default}
 .dsh-optimize-prompt:focus-visible{outline:2px solid var(--dsw-alias-state-business-primary,#5685ed);outline-offset:2px}
 .dsh-optimize-prompt[data-busy] svg{animation:dsh-optimize-spin 1.2s linear infinite}
+.dsh-optimize-prompt[data-busy]{width:auto;gap:5px;padding:0 6px;white-space:nowrap;font-size:12px}
 @keyframes dsh-optimize-spin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.dsh-optimize-prompt[data-busy] svg{animation:none}}
 
@@ -167,8 +168,13 @@ window.__ModuleLoader__.load({
           if (current.draftRev !== active.revision || current.draft !== active.draft || current.phase !== 'plain' || current.occurrences.length > 0) {
             notify('info', '草稿已更新，未替换你的新内容。'); return;
           }
+          if (result.value.prompt === before.draft) {
+            focusInput();
+            notify('info', '模型未建议修改，已保留原文。'); return;
+          }
           inputActions.setDraft(result.value.prompt);
           focusInput();
+          notify('info', '提示词已优化，请确认后发送。');
         } catch {
           if (request.current === active && !active.controller.signal.aborted) notifyOptimizationFailure(notify, { code: 'connection-error' });
         } finally {
@@ -179,7 +185,8 @@ window.__ModuleLoader__.load({
         type: 'button', className: 'dsh-optimize-prompt', 'aria-label': busy ? '正在优化提示词' : '优化提示词',
         title, disabled, 'aria-busy': busy, 'data-busy': busy ? '' : undefined, onClick,
       }, h('svg', { width: 17, height: 17, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true },
-        h('path', { d: 'm4 20 11-11 3 3L7 23ZM13 11l3 3M5 3l.8 2.2L8 6l-2.2.8L5 9l-.8-2.2L2 6l2.2-.8ZM19 2l.8 2.2L22 5l-2.2.8L19 8l-.8-2.2L16 5l2.2-.8Z' })));
+        h('path', { d: 'm4 20 11-11 3 3L7 23ZM13 11l3 3M5 3l.8 2.2L8 6l-2.2.8L5 9l-.8-2.2L2 6l2.2-.8ZM19 2l.8 2.2L22 5l-2.2.8L19 8l-.8-2.2L16 5l2.2-.8Z' })),
+        busy ? h('span', { 'aria-hidden': true }, '优化中…') : null);
     }
     function apply(ctx) {
       ctx.effect(() => {
