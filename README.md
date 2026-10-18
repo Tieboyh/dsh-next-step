@@ -1,0 +1,98 @@
+# dsh-next-step
+
+**Your next step. One Tab away.**
+
+[简体中文](README.zh-CN.md) · [Download](https://github.com/Tieboyh/dsh-next-step/releases/latest) · [English video](media/en/promo-en.mp4) · [中文视频](media/zh/promo-zh.mp4)
+
+![dsh-next-step — inline predictions for DeepSeek Harness](media/en/cover-en.png)
+
+A community plugin for **DeepSeek Harness desktop and web**. After a reply finishes, a suggested next message appears in gray inside the composer. Press **Tab** to turn it into an editable draft. You decide what to send.
+
+## See it work
+
+[![Watch the demo](media/en/demo-en.gif)](https://github.com/Tieboyh/dsh-next-step/releases/download/v0.2.0/promo-en.mp4)
+
+- **Inline suggestions:** same composer, same font, no extra suggestion panel.
+- **Tab to accept:** the prediction becomes a normal draft. It does not send itself.
+- **Esc to dismiss:** keep writing your own message.
+- **Your draft comes first:** typing, attachments, queued messages, and a new turn hide the prediction.
+- **One toggle:** enable or disable predictions beside the composer controls.
+- **Existing model setup:** uses DSH's configured provider and credentials. No separate API key to enter.
+
+| Inline prediction | Accepted draft |
+| --- | --- |
+| ![A gray prediction inside the composer](media/en/01-inline-prediction.png) | ![Tab turns the suggestion into editable text](media/en/02-tab-accepted.png) |
+
+[More screenshots](media/en/) · [Chinese screenshots](media/zh/)
+
+## Install
+
+No build step or runtime npm dependencies are required.
+
+**Desktop:** download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.2.0.zip), extract it, and add the extracted plugin directory from DSH's plugin manager.
+
+On macOS, the desktop app's bundled CLI also supports a local directory:
+
+```sh
+'/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh' \
+  plugin --profile desktop add link:/absolute/path/to/dsh-next-step
+```
+
+**Web:** install the tagged GitHub version:
+
+```sh
+dsh plugin --profile web add 'dsh-next-step@github:Tieboyh/dsh-next-step#v0.2.0'
+```
+
+For local development, use `link:/absolute/path/to/dsh-next-step` instead. The bundle patch registers the plugin automatically. Reload or restart DSH if your environment does not apply plugin changes live.
+
+## Keyboard
+
+| Key | Action |
+| --- | --- |
+| Tab | Accept the visible prediction as a draft |
+| Esc | Dismiss the current prediction |
+| Shift + Tab | Keep normal keyboard focus navigation |
+
+Predictions appear only when the session is idle and the draft, attachment list, and message queue are empty. IME composition does not trigger acceptance. Gray text is a display layer; it is not inserted into the editor document until accepted.
+
+## Model calls and data
+
+Generating a prediction makes an **additional request to your configured model service** and consumes that service's normal quota or billing. This plugin does not make inference local or free.
+
+The request contains up to 10 recent user/assistant text messages, capped at 12,000 characters. Reasoning blocks, tool results, and attachments are excluded. Predictions and the auxiliary prompt are not appended to the conversation transcript. Results are cached per completed turn in host memory; a restart clears the cache. Errors, timeouts, and unsuitable results leave the composer unchanged.
+
+## Configuration
+
+By default, the plugin reuses the current session's provider and model, with the model's default reasoning configuration. To choose another already-configured route, add this entry to your profile's `cordis.patch.yml`:
+
+```yaml
+- id: next-step
+  config:
+    timeoutMs: 25000
+    # provider: your-configured-provider-id
+    # model: your-model-id
+    # reasoningEffort: a-supported-effort-id
+```
+
+Set `provider` and `model` together. Timeout range: 1–60 seconds. Output cap: 512 tokens; accepted suggestions: at most 280 characters. No tools or agent actions run during prediction.
+
+## Compatibility and development
+
+Verified with **macOS DSH desktop 0.2.1-rc.2**. The media demo uses the matching DSH web runtime. Other versions may change plugin APIs.
+
+```sh
+npm run build  # JavaScript syntax checks
+npm test       # 12 behavior tests
+npm pack
+```
+
+- `index.js`: authenticated Connection Fetch RPC, shared by desktop IPC and web HTTP.
+- `engine.js`: context selection, model call, deduplication, and invalidation.
+- `client.js`: native DSH client module and composer ghost text.
+
+The screenshots and videos use the **actual DSH frontend and this plugin**, with a scripted demo provider and synthetic conversations. They are not evidence of live-model prediction quality. See [media provenance](docs/MEDIA.md).
+
+[English launch copy](docs/PROMO.en.md) · [中文宣传文案](docs/PROMO.zh-CN.md)
+
+MIT. Community project; not an official DeepSeek or OpenAI product.

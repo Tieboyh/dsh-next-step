@@ -1,0 +1,55 @@
+{
+  "name": "dsh-next-step",
+  "version": "0.2.0",
+  "description": "Next-message predictions for the local DeepSeek Harness desktop and web composer",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "engine.js",
+    "client.js",
+    "icon.svg",
+    "cordis.patch.yml",
+    "README.md",
+    "tests",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node --check index.js && node --check engine.js && node --check client.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-connection",
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tieboyh/dsh-next-step.git"
+  },
+  "homepage": "https://github.com/Tieboyh/dsh-next-step#readme",
+  "bugs": {
+    "url": "https://github.com/Tieboyh/dsh-next-step/issues"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "plugin",
+    "autocomplete",
+    "predictions"
+  ]
+}

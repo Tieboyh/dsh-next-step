@@ -1,0 +1,108 @@
+{
+  "version": "0.2.0",
+  "provenance": "Actual DSH UI with scripted demo data; videos are screenshot-based motion edits.",
+  "assets": [
+    {
+      "path": "media/en/01-inline-prediction.png",
+      "bytes": 118406,
+      "sha256": "fea8647bc6698b0911e16989226e927b00920f7c3713569b061294aced560b48",
+      "width": 2400,
+      "height": 1500
+    },
+    {
+      "path": "media/en/02-tab-accepted.png",
+      "bytes": 118609,
+      "sha256": "44328ca2ed5aceacf0a1ad6a429b35a371817099a43bdf142c8d9c9afa9e2b86",
+      "width": 2400,
+      "height": 1500
+    },
+    {
+      "path": "media/en/03-edit-before-send.png",
+      "bytes": 120839,
+      "sha256": "3b91809b20807871ef54d41acdddd8b119c0167b3d095ff48b849a5836484cf3",
+      "width": 2400,
+      "height": 1500
+    },
+    {
+      "path": "media/en/04-esc-dismissed.png",
+      "bytes": 148396,
+      "sha256": "e2b0f40021b939e7f0e5a54f9d3d8df6e7a0eca9eacbddc68c4b714c21bb3470",
+      "width": 2400,
+      "height": 1500
+    },
+    {
+      "path": "media/en/cover-en.png",
+      "bytes": 106903,
+      "sha256": "bb47c25786b8894160620bf53c657b2cb7b4d9f7efec45a7a5d20f683f93a0a9",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "media/en/demo-en.gif",
+      "bytes": 489404,
+      "sha256": "d34b8c6ae673440f920cfb4a821fcbf3088bd9151ac70ab4a3c2de6eb4d37368",
+      "width": 800,
+      "height": 450
+    },
+    {
+      "path": "media/en/promo-en.mp4",
+      "bytes": 813975,
+      "sha256": "08167682041025117d0c15adb8b817bbd47c01ce029799a0f4e2ab55b6c7e5ff",
+      "width": 1920,
+      "height": 1080,
+      "fps": 24,
+      "durationSeconds": 28
+    },
+    {
+      "path": "media/zh/01-inline-prediction.png",
+      "bytes": 121056,
+      "sha256": "03cbe9bba8bffa11e4f206483b44885efc8c8e9a88981111889848cddbba16b0",
+      "width": 2400,
+      "height": 1500
+    },
+    {
+      "path": "media/zh/02-tab-accepted.png",
+      "bytes": 121798,
+      "sha256": "5da2c0cc62387875a9b78f04aeac661b88753825687e979a6a238225306ec508",
+      "width": 2400,
+      "height": 1500
+    },
+    {
+      "path": "media/zh/03-edit-before-send.png",
+      "bytes": 126042,
+      "sha256": "3d00d2f4a518d6fb3d08e3a5aa24841bce352f7f519090cbe828e404dce54333",
+      "width": 2400,
+      "height": 1500
+    },
+    {
+      "path": "media/zh/04-esc-dismissed.png",
+      "bytes": 146379,
+      "sha256": "d76dd7084ddcc6abd87c3d951d3c546ebaf394865e50136f0c38662512476a90",
+      "width": 2400,
+      "height": 1500
+    },
+    {
+      "path": "media/zh/cover-zh.png",
+      "bytes": 111909,
+      "sha256": "ba57fe49fe3502dd3696a04f5ed506e129a2fe004c0a272da080fca48804d709",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "media/zh/demo-zh.gif",
+      "bytes": 417606,
+      "sha256": "88d40ea38f6db529cbabfbccff383a48a5005e1c999d21ff96f0f99dcfa334a6",
+      "width": 800,
+      "height": 450
+    },
+    {
+      "path": "media/zh/promo-zh.mp4",
+      "bytes": 786924,
+      "sha256": "20d9dd800496356311d9f398ee4499b3b226abfb5beef956615a020d2c3ebe24",
+      "width": 1920,
+      "height": 1080,
+      "fps": 24,
+      "durationSeconds": 28
+    }
+  ]
+}
