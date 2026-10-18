@@ -13,7 +13,7 @@ A community plugin for **DeepSeek Harness desktop and web**. After a reply finis
 [![Watch the demo](media/en/demo-en.gif)](https://github.com/Tieboyh/dsh-next-step/releases/download/v0.3.0/promo-en.mp4)
 
 - **Inline suggestions:** same composer, same font, no extra suggestion panel.
-- **One-click prompt improvement:** write a draft, then click the magic-wand icon to clarify its wording while preserving your intent. Review and edit the result before sending.
+- **One-click prompt improvement:** write a draft, then click the magic-wand icon to turn it into an actionable request. Known requirements stay explicit; missing details appear under **To confirm**, without invented requirements. Review and edit before sending.
 - **Tab to accept:** the prediction becomes a normal draft. It does not send itself.
 - **Esc to dismiss:** keep writing your own message.
 - **Your draft comes first:** typing, attachments, queued messages, and a new turn hide the prediction.
@@ -34,13 +34,17 @@ The improvement screen comes from v0.3.0 verification. Prediction text details a
 
 No build step or runtime npm dependencies are required.
 
-1. Download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.3.2.zip) and extract it.
+1. Download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.4.0.zip) and extract it.
 2. Add the extracted plugin directory in DSH’s **Plugin Manager**.
 3. Enable **dsh-next-step** there. Use the same manager to disable it.
 
 Both features follow the plugin state, with no separate composer toggle. Reload an updated local installation through Plugin Manager; no separate startup entry point is needed.
 
 ## Improve a draft
+
+The optimizer turns a brief into an actionable prompt: a clear goal, the requirements you supplied, and steps that follow from that goal. When missing details materially affect execution, it lists specific questions under **To confirm** and asks the recipient to resolve them before making dependent decisions. It does not choose an unrequested framework, style, feature set, deadline, or budget. Complete requests stay concise without an unnecessary question list.
+
+For example, “Build a website with a distinctive style” becomes a request to design and build that website, with its purpose, audience, style references, and page/function scope listed as questions to confirm—not as assumed requirements.
 
 The button displays a working label while a request is pending. Completion reports either that the draft was improved or that the model suggested no changes. Identical output leaves the draft and its revision untouched.
 

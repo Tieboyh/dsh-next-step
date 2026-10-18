@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0
+
+- Turn vague drafts into actionable requests with explicit goals, known requirements, and appropriate execution steps.
+- List materially missing information under “待确认项” or “To confirm” in the draft’s language, as questions rather than assumed answers.
+- Require confirmation before decisions that depend on missing information; never invent features, technical choices, dates, budgets, or scope.
+- Keep fully specified requests concise and preserve existing language, negations, and explicit constraints.
+- Keep the existing draft protections, progress feedback, and classified errors.
+
+把模糊想法整理成可执行提示词，缺失的关键信息单独列为待确认项；已知要求保持明确，不擅自编造需求。信息完整的简单请求不强行扩写。
+
 ## 0.3.2
 
 - Show a visible working label beside the wand during optimization.
