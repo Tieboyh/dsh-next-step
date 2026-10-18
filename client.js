@@ -3,51 +3,23 @@ window.__ModuleLoader__.load({
   factory(require) {
     const React = require('react');
     const h = React.createElement;
-    const KEY = 'dsh-next-step/enabled';
-    const EVENT = 'dsh-next-step/toggle';
-    const isEnabled = () => { try { return localStorage.getItem(KEY) !== 'false'; } catch { return true; } };
     const CSS = `
 [data-composer-input][data-dsh-next-step]{position:relative;--dsh-composer-hint:none!important}
 [data-composer-input][data-dsh-next-step]::before{content:attr(data-dsh-next-step);position:absolute;inset:4px 48px auto 14px;color:var(--dsw-alias-label-caption,#929292);font:inherit;line-height:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;user-select:none}
 [data-composer-input][data-dsh-next-step]::after{content:"Tab";position:absolute;right:12px;top:7px;font:10px/16px var(--dsw-font-family,inherit);color:var(--dsw-alias-label-caption,#929292);border:1px solid var(--dsw-alias-border-l2,rgba(128,128,128,.22));border-radius:4px;padding:0 4px;pointer-events:none;user-select:none}
 [data-composer-input][data-dsh-next-step]~[data-composer-placeholder]{visibility:hidden}
 [data-composer-input][data-dsh-next-step][data-composer-composing]::before,[data-composer-input][data-dsh-next-step][data-composer-composing]::after{display:none}
-.dsh-ns-toggle{font:inherit;font-size:12px;color:var(--dsw-alias-label-tertiary);background:transparent;border:0;border-radius:6px;cursor:pointer;padding:4px 7px;white-space:nowrap}
-.dsh-ns-toggle[aria-pressed=true]{color:var(--dsw-alias-state-business-primary,#5685ed)}
-.dsh-ns-toggle:focus-visible{outline:2px solid var(--dsw-alias-state-business-primary,#5685ed);outline-offset:2px}
 `;
-    function useEnabled() {
-      const [enabled, setEnabled] = React.useState(isEnabled);
-      React.useEffect(() => {
-        const update = () => setEnabled(isEnabled());
-        window.addEventListener(EVENT, update);
-        window.addEventListener('storage', update);
-        return () => { window.removeEventListener(EVENT, update); window.removeEventListener('storage', update); };
-      }, []);
-      return enabled;
-    }
-    function Toggle() {
-      const enabled = useEnabled();
-      return h('button', {
-        className: 'dsh-ns-toggle', type: 'button', 'aria-pressed': enabled,
-        title: '下一步建议：使用当前会话模型，额外消耗模型额度；点击开关',
-        onClick() {
-          try { localStorage.setItem(KEY, String(!enabled)); } catch { /* Storage may be disabled by the shell. */ }
-          window.dispatchEvent(new Event(EVENT));
-        },
-      }, enabled ? '✧ 下一步' : '✧ 下一步已关');
-    }
     function Prediction({ sessionId, useSession, useInput, inputActions, call, focusInput }) {
       const running = useSession(s => s.running);
       const pending = useSession(s => s.pendingSubmissions.length > 0);
       const input = useInput(s => s);
-      const enabled = useEnabled();
       const [prediction, setPrediction] = React.useState(null);
       const tried = React.useRef(false);
       const dismissed = React.useRef(new Set());
       const composing = React.useRef(false);
       const root = React.useRef(null);
-      const allowed = enabled && !running && !pending && input.phase === 'plain'
+      const allowed = !running && !pending && input.phase === 'plain'
         && input.draft === '' && input.attachmentIds.length === 0 && input.queue.length === 0;
 
       React.useEffect(() => { tried.current = false; dismissed.current.clear(); setPrediction(null); }, [sessionId]);
@@ -65,7 +37,7 @@ window.__ModuleLoader__.load({
           } catch { /* Auxiliary request failures never interrupt the conversation. */ }
         }, 350);
         return () => { active = false; clearTimeout(timer); abort.abort(); };
-      }, [sessionId, allowed, running, enabled, call]);
+      }, [sessionId, allowed, running, call]);
 
       const dismiss = React.useCallback(() => {
         if (prediction) dismissed.current.add(prediction.revision);
@@ -137,9 +109,7 @@ window.__ModuleLoader__.load({
           return { call, focusInput: () => facade.focus() };
         },
       }, Prediction));
-      ctx.slots.inject('conversation.input.left', () => ctx.slots.register({
-        name: 'conversation.input.left', id: 'dsh-next-step-toggle', order: 90,
-      }, Toggle));
+
     }
     return { inject: ['slots', 'sessions', 'conversation', 'connection'], apply };
   },

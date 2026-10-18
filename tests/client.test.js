@@ -7,7 +7,7 @@ const source = await readFile(new URL('../client.js', import.meta.url), 'utf8');
 const pause = ms => new Promise(r => setTimeout(r, ms));
 function mount(response = Promise.resolve({ ok: true, value: { revision: '1:3', suggestion: '补上边界测试。' } })) {
   const entries = new Map(), listeners = new Map(), states = [], effects = [];
-  let plugin, cursor = 0, dirty = false, tree, calls = 0, focus = 0, sends = 0;
+  let plugin, cursor = 0, dirty = false, tree, calls = 0, focus = 0, sends = 0, storageReads = 0;
   const session = { running: false, pendingSubmissions: [] };
   const input = { draft: '', phase: 'plain', attachmentIds: [], queue: [] };
   const React = {
@@ -43,7 +43,7 @@ function mount(response = Promise.resolve({ ok: true, value: { revision: '1:3', 
     removeEventListener(name, fn) { listeners.get(name)?.delete(fn); },
     dispatchEvent(event) { for (const fn of listeners.get(event.type) ?? []) fn(event); },
   };
-  vm.runInNewContext(source, { window, document: { head: { append() {} }, createElement() { return { dataset: {}, remove() {} }; } }, HTMLElement: Element, localStorage: { getItem() { return null; } }, Event, setTimeout, clearTimeout, AbortController });
+  vm.runInNewContext(source, { window, document: { head: { append() {} }, createElement() { return { dataset: {}, remove() {} }; } }, HTMLElement: Element, localStorage: { getItem() { storageReads++; return 'false'; } }, Event, setTimeout, clearTimeout, AbortController });
   plugin.apply({
     effect(fn) { fn(); },
     slots: { inject(_name, fn) { fn(); }, register(def, component) { entries.set(def.id, { def, component }); } },
@@ -70,7 +70,7 @@ function mount(response = Promise.resolve({ ok: true, value: { revision: '1:3', 
     return prevented;
   }
   function dispose() { for (const s of states) s?.cleanup?.(); }
-  return { render, key, dispose, input, session, window, editor, calls: () => calls, focus: () => focus, sends: () => sends };
+  return { render, key, dispose, input, session, window, editor, entries, listeners, storageReads: () => storageReads, calls: () => calls, focus: () => focus, sends: () => sends };
 }
 test('Tab accepts only a visible prediction; modifiers and IME pass through; never submits', async () => {
   const m = mount(); m.render(); await pause(370);
@@ -105,4 +105,16 @@ test('ghost accessibility annotation is restored on dismissal and disposal', asy
   m.dispose();
   assert.equal(m.editor.getAttribute('data-dsh-next-step'), null);
   assert.equal(m.editor.getAttribute('aria-description'), '原有说明');
+});
+
+test('plugin activation ignores the old disabled preference and registers no composer toggle', async () => {
+  const m = mount(); m.render(); await pause(370); m.render();
+  assert.equal(m.entries.size, 1);
+  assert.equal(m.entries.has('dsh-next-step-toggle'), false);
+  assert.equal(m.storageReads(), 0);
+  assert.equal(m.listeners.has('storage'), false);
+  assert.equal(m.listeners.has('dsh-next-step/toggle'), false);
+  assert.equal(m.calls(), 1);
+  assert.equal(m.editor.getAttribute('data-dsh-next-step'), '补上边界测试。');
+  m.dispose();
 });

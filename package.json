@@ -1,6 +1,6 @@
 {
   "name": "dsh-next-step",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Next-message predictions for the local DeepSeek Harness desktop and web composer",
   "type": "module",
   "license": "MIT",

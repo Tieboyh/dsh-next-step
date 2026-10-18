@@ -16,7 +16,7 @@ After a reply finishes, it suggests a useful follow-up based on the recent conve
 
 Press **Tab** to make it an editable draft. Press **Esc** to dismiss it, or just write your own message. Nothing is sent automatically.
 
-It works with DSH desktop and web and uses your existing model configuration and credentials. There is no separate API key to enter, and a toggle beside the composer turns it off whenever you want.
+It works with DSH desktop and web and uses your existing model configuration and credentials. There is no separate API key to enter. Predictions stay active while the plugin is enabled; disable the plugin in DSH’s plugin manager to turn them off.
 
 Predictions make an additional model request and use your model service's normal quota or billing. If there is no useful next step, the plugin can stay quiet.
 
