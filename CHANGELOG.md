@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.0
+
+- Prefer an executable spec with sensible, proportionate defaults instead of a list of questions.
+- Label inferred choices as Proposed defaults / 默认方案（可调整）; retain explicit requirements and exclusions.
+- Reserve confirmation questions for essential information that cannot safely be defaulted.
+- Use labeled placeholder content rather than invented real-world facts; avoid unrelated scope and commitments.
+- Per the requested workflow, no additional functional validation was run.
+
+允许自主补充合理默认方案，尽量减少待确认项，直接形成可执行 spec；默认项明确可调整，不伪造事实或覆盖用户已有要求。
+
 ## 0.4.1
 
 - Prefer a compact, well-described specification for creation and implementation requests, with task-appropriate sections.

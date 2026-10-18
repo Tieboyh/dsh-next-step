@@ -13,7 +13,7 @@ A community plugin for **DeepSeek Harness desktop and web**. After a reply finis
 [![Watch the demo](media/en/demo-en.gif)](https://github.com/Tieboyh/dsh-next-step/releases/download/v0.3.0/promo-en.mp4)
 
 - **Inline suggestions:** same composer, same font, no extra suggestion panel.
-- **One-click prompt improvement:** write a draft, then click the magic-wand icon to turn it into a well-described, actionable spec. Known requirements stay explicit; missing details appear under **To confirm**, without invented requirements. Review and edit before sending.
+- **One-click prompt improvement:** write a draft, then click the magic-wand icon to turn it into a well-described, actionable spec. Explicit requirements stay intact; routine gaps receive reasonable **Proposed defaults** so work can begin with minimal questions. Review and edit before sending.
 - **Tab to accept:** the prediction becomes a normal draft. It does not send itself.
 - **Esc to dismiss:** keep writing your own message.
 - **Your draft comes first:** typing, attachments, queued messages, and a new turn hide the prediction.
@@ -34,7 +34,7 @@ The improvement screen comes from v0.3.0 verification. Prediction text details a
 
 No build step or runtime npm dependencies are required.
 
-1. Download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.4.1.zip) and extract it.
+1. Download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.5.0.zip) and extract it.
 2. Add the extracted plugin directory in DSH’s **Plugin Manager**.
 3. Enable **dsh-next-step** there. Use the same manager to disable it.
 
@@ -42,9 +42,11 @@ Both features follow the plugin state, with no separate composer toggle. Reload 
 
 ## Improve a draft
 
-The optimizer turns a brief into a compact specification that can be given directly to an AI or developer. It organizes the goal, known requirements, scope, constraints, behavior, and acceptance criteria when the draft supports those sections. Empty boilerplate is omitted. Acceptance checks must follow from stated requirements; missing scope or acceptance criteria become questions, not invented defaults. When missing details materially affect execution, it lists specific questions under **To confirm** and asks the recipient to resolve them before making dependent decisions. It does not choose an unrequested framework, style, feature set, deadline, or budget. Complete requests stay concise without an unnecessary question list.
+The optimizer turns a brief into a compact, executable spec: goals, requirements, a default approach, behavior, and observable acceptance checks. It may add proportionate, low-risk defaults for ordinary gaps, labeled **Proposed defaults** so they remain easy to adjust. It preserves explicit exclusions and does not expand a small task into an unrelated product.
 
-For example, “Build a website with a distinctive style” becomes a request to design and build that website, with its purpose, audience, style references, and page/function scope listed as questions to confirm—not as assumed requirements.
+For a vague website request, it can propose a first-version page structure, visual direction, responsive behavior, and implementation approach instead of returning a questionnaire. Existing project conventions take priority. Missing real names, content, or data use labeled placeholders, not fabricated facts.
+
+**To confirm** is reserved for essential information that cannot safely be replaced by a default or placeholder—for example, a decision involving irreversible effects, sensitive permissions, or a material conflict with the goal. Ordinary design preferences should not block progress. Complete, simple requests stay concise.
 
 The button displays a working label while a request is pending. Completion reports either that the draft was improved or that the model suggested no changes. Identical output leaves the draft and its revision untouched.
 
