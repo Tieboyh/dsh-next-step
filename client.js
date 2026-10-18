@@ -134,7 +134,8 @@ window.__ModuleLoader__.load({
       const detail = Number.isInteger(status) && status >= 400 && status <= 599 ? `（HTTP ${status}）` : '';
       notify('error', `${message}${detail}原草稿已保留。`);
     }
-    function PromptOptimizer({ sessionId, useSession, useInput, inputActions, optimize, getInput, focusInput, notify }) {
+    function PromptOptimizer({ sessionId, useSession, useInput, inputActions, optimize, getInput, focusInput, notify, clearSuccessNotice }) {
+      React.useEffect(clearSuccessNotice, [clearSuccessNotice]);
       const running = useSession(s => s.running);
       const pending = useSession(s => s.pendingSubmissions.length > 0);
       const input = useInput(s => s);
@@ -152,7 +153,7 @@ window.__ModuleLoader__.load({
       }, [input.draftRev, input.draft, input.phase, running, pending]);
       const hasReferences = input.occurrences.length > 0;
       const disabled = busy || running || pending || input.phase !== 'plain' || !input.draft.trim() || input.draft.length > 12000 || hasReferences;
-      const title = busy ? '正在优化提示词…' : hasReferences ? '含文件或会话引用的草稿暂不支持优化' : input.draft.length > 12000 ? '提示词超过 12000 字符' : '优化提示词 · 自动补全默认方案 · v0.5.1';
+      const title = busy ? '正在优化提示词…' : hasReferences ? '含文件或会话引用的草稿暂不支持优化' : input.draft.length > 12000 ? '提示词超过 12000 字符' : '优化提示词 · 自动补全默认方案 · v0.5.2';
       async function onClick() {
         if (disabled || request.current) return;
         const before = getInput();
@@ -175,7 +176,6 @@ window.__ModuleLoader__.load({
           }
           inputActions.setDraft(result.value.prompt);
           focusInput();
-          notify('info', '提示词已优化，请确认后发送。');
         } catch {
           if (request.current === active && !active.controller.signal.aborted) notifyOptimizationFailure(notify, { code: 'connection-error' });
         } finally {
@@ -210,7 +210,14 @@ window.__ModuleLoader__.load({
         inject(sessionId) {
           const scope = ctx.sessions.scope(sessionId);
           const facade = ctx.conversation.input.for(scope);
-          return { optimize, getInput: () => facade.state.getSnapshot(), focusInput: () => facade.focus(), notify: (level, text) => facade.notify(level, text) };
+          return {
+            optimize, getInput: () => facade.state.getSnapshot(), focusInput: () => facade.focus(),
+            notify: (level, text) => facade.notify(level, text),
+            clearSuccessNotice: () => {
+              const notice = facade.notices.getSnapshot();
+              if (notice?.level === 'info' && notice.text === '提示词已优化，请确认后发送。') facade.notices.set(null);
+            },
+          };
         },
       }, PromptOptimizer));
     }

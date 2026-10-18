@@ -11,6 +11,7 @@ function mount(response = Promise.resolve({ ok: true, value: { revision: '1:3', 
   const session = { running: false, pendingSubmissions: [] };
   const input = { draft: '', draftRev: 0, phase: 'plain', attachmentIds: [], queue: [], occurrences: [] };
   const requests = [], notices = [];
+  let currentNotice = null;
   const React = {
     Fragment: 'fragment',
     createElement: (tag, props, ...children) => ({ tag, props, children }),
@@ -48,7 +49,11 @@ function mount(response = Promise.resolve({ ok: true, value: { revision: '1:3', 
   plugin.apply({
     effect(fn) { fn(); },
     slots: { inject(_name, fn) { fn(); }, register(def, component) { entries.set(def.id, { def, component }); } },
-    sessions: { scope() { return {}; } }, conversation: { input: { for() { return { focus() { focus++; }, state: { getSnapshot: () => input }, notify(level, text) { notices.push({ level, text }); } }; } } },
+    sessions: { scope() { return {}; } }, conversation: { input: { for() { return {
+      focus() { focus++; }, state: { getSnapshot: () => input },
+      notices: { getSnapshot: () => currentNotice, set(value) { currentNotice = value; } },
+      notify(level, text) { currentNotice = { level, text }; notices.push({ level, text }); },
+    }; } } },
     connection: { rpc: { call(_channel, _endpoint, payload, signal) { calls++; requests.push({ payload, signal }); return response; } } },
   });
   const entry = entries.get(entryId);
@@ -71,7 +76,7 @@ function mount(response = Promise.resolve({ ok: true, value: { revision: '1:3', 
     return prevented;
   }
   function dispose() { for (const s of states) s?.cleanup?.(); }
-  return { render, key, dispose, input, session, window, editor, entries, listeners, requests, notices, storageReads: () => storageReads, calls: () => calls, focus: () => focus, sends: () => sends };
+  return { render, key, dispose, input, session, window, editor, entries, listeners, requests, notices, setNotice: value => { currentNotice = value; }, currentNotice: () => currentNotice, storageReads: () => storageReads, calls: () => calls, focus: () => focus, sends: () => sends };
 }
 test('Tab accepts only a visible prediction; modifiers and IME pass through; never submits', async () => {
   const m = mount(); m.render(); await pause(370);
@@ -141,9 +146,20 @@ test('optimizer replaces only the draft, preserves attachments, blocks duplicate
   resolve({ ok: true, value: { prompt: '请实现任务的添加与删除，保持界面简洁。' } }); await pending;
   assert.equal(m.input.draft, '请实现任务的添加与删除，保持界面简洁。');
   assert.deepEqual(m.input.attachmentIds, ['file-1']); assert.equal(m.sends(), 0); assert.equal(m.focus(), 1);
-  assert.equal(m.notices[0].text, '提示词已优化，请确认后发送。');
-  assert.equal(m.notices[0].level, 'info');
+  assert.equal(m.notices.length, 0);
   assert.equal(m.render().props['aria-busy'], false); m.dispose();
+});
+
+test('mount removes only the obsolete optimization success notice', () => {
+  for (const notice of [
+    { level: 'info', text: '提示词已优化，请确认后发送。' },
+    { level: 'info', text: '来自其他插件的提示' },
+    { level: 'error', text: '模型请求失败' },
+  ]) {
+    const m = mount(undefined, 'dsh-optimize-prompt'); m.setNotice(notice); m.render();
+    assert.equal(m.currentNotice(), notice.text === '提示词已优化，请确认后发送。' ? null : notice);
+    m.dispose();
+  }
 });
 
 test('unchanged optimization reports completion without rewriting the draft or incrementing its revision', async () => {

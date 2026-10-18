@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.2
+
+- Remove the successful-optimization banner; updated text appears directly in the composer.
+- Clear only the obsolete success notice when the new component mounts, retaining unrelated notices.
+- Keep progress, unchanged-output feedback, and failures visible.
+- Functional tests were not run, following the requested manual-validation workflow.
+
+移除“提示词已优化，请确认后发送”提示条，并在新版加载时清理同一条旧提示；保留其他提示。
+
 ## 0.5.1
 
 - Remove the prompt-policy exception that still allowed confirmation sections.
