@@ -1,0 +1,36 @@
+CHANGELOG.md
+  h_2e09cbd7ad2696 3-11
+README.md
+  h_2e09cbd7ad2696 16,33,45,50-55,93,99-100
+README.zh-CN.md
+  h_2e09cbd7ad2696 16,33,45,50-55,93,99-100
+client.js
+  h_2e09cbd7ad2696 12-19,105-153,161,170-177
+docs/MEDIA.md
+  h_2e09cbd7ad2696 19,37
+docs/PROMO.en.md
+  h_2e09cbd7ad2696 17-19
+docs/PROMO.zh-CN.md
+  h_2e09cbd7ad2696 17-19
+index.js
+  h_2e09cbd7ad2696 2,9-15,27-42
+optimizer.js
+  h_2e09cbd7ad2696 1-76
+package.json
+  h_2e09cbd7ad2696 3-4,21-22,25
+tests/client.test.js
+  h_2e09cbd7ad2696 8,12-13,51-52,54,58,74,113,122-169
+tests/optimizer.test.js
+  h_2e09cbd7ad2696 1-65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "98f032c77f517cee8e6727854cfbefb40c3155f8",
+  "prompts": {},
+  "humans": {
+    "h_2e09cbd7ad2696": {
+      "author": "Tieboyh <272408466+Tieboyh@users.noreply.github.com>"
+    }
+  }
+}
