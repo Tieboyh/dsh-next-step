@@ -117,6 +117,7 @@ window.__ModuleLoader__.load({
         'output-truncated': '模型输出被截断，请缩短草稿后重试。',
         'empty-output': '模型未返回优化文本，请重试或更换模型。',
         'invalid-output': '模型返回格式不符合要求，请重试或更换模型。',
+        'unresolved-questions': '模型仍在要求补充信息，未生成可执行规格，请重试或更换模型。',
         'incomplete-output': '模型未完整返回结果，请重试。',
         'context-exceeded': '草稿超出当前模型的上下文限制，请缩短后重试。',
         'request-interrupted': '模型请求被中断，请稍后重试。',
@@ -151,7 +152,7 @@ window.__ModuleLoader__.load({
       }, [input.draftRev, input.draft, input.phase, running, pending]);
       const hasReferences = input.occurrences.length > 0;
       const disabled = busy || running || pending || input.phase !== 'plain' || !input.draft.trim() || input.draft.length > 12000 || hasReferences;
-      const title = busy ? '正在优化提示词…' : hasReferences ? '含文件或会话引用的草稿暂不支持优化' : input.draft.length > 12000 ? '提示词超过 12000 字符' : '优化提示词 · 保留原意，不会自动发送';
+      const title = busy ? '正在优化提示词…' : hasReferences ? '含文件或会话引用的草稿暂不支持优化' : input.draft.length > 12000 ? '提示词超过 12000 字符' : '优化提示词 · 自动补全默认方案 · v0.5.1';
       async function onClick() {
         if (disabled || request.current) return;
         const before = getInput();

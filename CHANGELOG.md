@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.1
+
+- Remove the prompt-policy exception that still allowed confirmation sections.
+- Repair a recognized confirmation section once using the original draft; reject persistent question lists without overwriting the draft.
+- Share cancellation and timeout across both requests; a repair consumes one additional model request.
+- Show the loaded client version in the optimizer tooltip for reload diagnosis.
+- Add regression cases for repair and rejection; not run in this revision per the requested manual validation workflow.
+
+删除待确认章节的规则例外；检测到相应章节时自动整理一次，仍未解决则保留原稿。图标提示包含版本号以识别运行中的旧前端。
+
 ## 0.5.0
 
 - Prefer an executable spec with sensible, proportionate defaults instead of a list of questions.

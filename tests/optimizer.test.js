@@ -144,3 +144,29 @@ test('RPC dispatches explicit optimization and rejects invalid actions and promp
   assert.equal((await call({ sessionId: 'test', action: 'other' })).error.code, 'invalid-action');
   for (const dispose of disposers) dispose?.();
 });
+
+test('confirmation sections are rewritten once into defaults without dropping the original draft', async () => {
+  let attempts = 0;
+  const f = fixture(async function* () {
+    const prompt = attempts++ === 0 ? '# 网站\n## 待确认项\n- 用什么布局？'
+      : '# 网站\n## 默认方案（可调整）\n采用单页布局。\n不提供登录。';
+    yield { type: 'text-delta', text: JSON.stringify({ prompt }) };
+    yield { type: 'finish', reason: { kind: 'stop' } };
+  });
+  const optimizer = createPromptOptimizer(f.ctx);
+  const result = await optimizer.optimize('test', '做一个网站，不提供登录。');
+  assert.match(result.prompt, /默认方案/); assert.equal(f.requests.length, 2);
+  assert.deepEqual(f.requests[1].messages[0], f.requests[0].messages[0]);
+  assert.match(f.requests[1].messages[1].content[0].text, /待确认项/);
+  assert.equal(f.requests[1].signal, f.requests[0].signal); optimizer.dispose();
+});
+
+test('persistent confirmation sections are rejected after one repair, not returned as a successful draft', async () => {
+  const f = fixture(async function* () {
+    yield { type: 'text-delta', text: JSON.stringify({ prompt: '## To confirm\n- Choose a layout?' }) };
+    yield { type: 'finish', reason: { kind: 'stop' } };
+  });
+  const optimizer = createPromptOptimizer(f.ctx);
+  await assert.rejects(optimizer.optimize('test', 'Build a website'), { code: 'unresolved-questions' });
+  assert.equal(f.requests.length, 2); optimizer.dispose();
+});

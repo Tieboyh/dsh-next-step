@@ -80,10 +80,11 @@ Build a practical spec from the draft and reasonable assumptions:
   missing names, copy, images, and data rather than pretending they are real.
 - Do not invent paid-service commitments, deadlines, legal obligations, access permissions,
   destructive actions, or unrelated authentication/payment infrastructure.
-- Avoid a "待确认项" / "To confirm" section by default. Only include one when essential
-  information cannot safely be substituted with a default or placeholder, and proceeding would
-  create a material risk, irreversible action, or an outcome incompatible with the stated goal.
-  Ask only the indispensable question and allow independent work to proceed.
+- Do not output a "待确认项", "待澄清", "To confirm", or "Open questions" section.
+  Replace ordinary unanswered questions with concrete, reversible defaults in the spec.
+  For credentials, real personal/business data, payments, permissions, or irreversible actions,
+  use explicit placeholders and safe execution constraints. Never invent those values or imply
+  authorization. Do not turn them into an interview or a follow-up question list.
 - The result must be a spec that can be executed now, not a questionnaire or a request that
   the recipient first interview the user. Do not make ordinary design preferences blockers.
 
@@ -134,6 +135,10 @@ export function parseOptimizedPrompt(text) {
   return prompt;
 }
 
+export function hasConfirmationSection(prompt) {
+  return /^\s{0,3}(?:#{1,6}\s*)?(?:\d+[.)、]\s*)?(?:\*{1,2})?(?:待确认(?:项|事项|问题|信息)?|待澄清(?:项|事项|问题)?|需要(?:你|用户)?确认(?:的事项|的问题)?|to confirm|open questions|clarification questions)(?:\*{1,2})?\s*[:：]?\s*$/imu.test(prompt);
+}
+
 export function createPromptOptimizer(ctx, options = {}) {
   const active = new Map();
   const timeoutMs = Math.max(1000, Math.min(60000, Number(options.timeoutMs) || 25000));
@@ -161,26 +166,37 @@ export function createPromptOptimizer(ctx, options = {}) {
       };
       if (session) request.sessionId = session.id;
       if (options.reasoningEffort) request.reasoningEffort = options.reasoningEffort;
-      let text = '', finish;
-      for await (const chunk of ctx.llm.stream(request)) {
+      async function generate(messages) {
+        let text = '', finish;
+        for await (const chunk of ctx.llm.stream({ ...request, messages })) {
+          controller.signal.throwIfAborted();
+          if (chunk.type === 'text-delta') text += chunk.text;
+          if (chunk.type === 'tool-call-delta' || text.length > 40000) throw new OptimizationError('invalid-output');
+          if (chunk.type === 'finish') finish = chunk.reason;
+        }
         controller.signal.throwIfAborted();
-        if (chunk.type === 'text-delta') text += chunk.text;
-        if (chunk.type === 'tool-call-delta' || text.length > 40000) throw new OptimizationError('invalid-output');
-        if (chunk.type === 'finish') finish = chunk.reason;
+        // DSH adapters can deliver service failures as terminal chunks.
+        if (finish?.kind === 'error' || finish?.kind === 'aborted') {
+          const failure = optimizationFailure(finish.failure);
+          throw new OptimizationError(failure.code, failure.details);
+        }
+        if (finish?.kind === 'max-tokens') throw new OptimizationError('output-truncated');
+        if (finish?.kind !== 'stop') throw new OptimizationError('incomplete-output');
+        if (!text.trim()) throw new OptimizationError('empty-output');
+        const prompt = parseOptimizedPrompt(text);
+        if (!prompt) throw new OptimizationError('invalid-output');
+        return prompt;
       }
+      let prompt = await generate(request.messages);
+      if (hasConfirmationSection(prompt)) {
+        prompt = await generate([
+          ...request.messages,
+          { role: 'assistant', content: [{ type: 'text', text: JSON.stringify({ prompt }) }] },
+          { role: 'user', content: [{ type: 'text', text: 'Revise the previous specification. Replace its confirmation-question sections with concrete, reasonable defaults or explicitly labeled placeholders and safe execution constraints. Preserve the original goal and explicit requirements. Do not merely delete unresolved requirements. Return only the same JSON format, with no confirmation-question section.' }] },
+        ]);
+      }
+      if (hasConfirmationSection(prompt)) throw new OptimizationError('unresolved-questions');
       controller.signal.throwIfAborted();
-      // DSH adapters often report service failures in a terminal chunk rather
-      // than throwing. Preserve their failure code instead of calling it an
-      // incomplete generation (or attempting to parse its partial text).
-      if (finish?.kind === 'error' || finish?.kind === 'aborted') {
-        const failure = optimizationFailure(finish.failure);
-        throw new OptimizationError(failure.code, failure.details);
-      }
-      if (finish?.kind === 'max-tokens') throw new OptimizationError('output-truncated');
-      if (finish?.kind !== 'stop') throw new OptimizationError('incomplete-output');
-      if (!text.trim()) throw new OptimizationError('empty-output');
-      const prompt = parseOptimizedPrompt(text);
-      if (!prompt) throw new OptimizationError('invalid-output');
       return { prompt };
     } catch (error) {
       if (timedOut) throw new OptimizationError('timeout', { timeoutMs });

@@ -34,7 +34,7 @@ The improvement screen comes from v0.3.0 verification. Prediction text details a
 
 No build step or runtime npm dependencies are required.
 
-1. Download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.5.0.zip) and extract it.
+1. Download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.5.1.zip) and extract it.
 2. Add the extracted plugin directory in DSH’s **Plugin Manager**.
 3. Enable **dsh-next-step** there. Use the same manager to disable it.
 
@@ -46,13 +46,13 @@ The optimizer turns a brief into a compact, executable spec: goals, requirements
 
 For a vague website request, it can propose a first-version page structure, visual direction, responsive behavior, and implementation approach instead of returning a questionnaire. Existing project conventions take priority. Missing real names, content, or data use labeled placeholders, not fabricated facts.
 
-**To confirm** is reserved for essential information that cannot safely be replaced by a default or placeholder—for example, a decision involving irreversible effects, sensitive permissions, or a material conflict with the goal. Ordinary design preferences should not block progress. Complete, simple requests stay concise.
+The optimizer does not request a confirmation section. Missing sensitive values use placeholders and safe execution constraints; routine gaps use proposed defaults. If a returned spec still has a recognized confirmation-section heading, it receives one repair request using the original draft. A second such result is rejected without replacing the draft. Both attempts share the existing timeout. Complete, simple requests stay concise.
 
 The button displays a working label while a request is pending. Completion reports either that the draft was improved or that the model suggested no changes. Identical output leaves the draft and its revision untouched.
 
 Click the magic-wand icon beside the composer controls. The request uses your configured model and sends only the current draft. The result replaces the draft without sending it. If you edit, send, switch sessions, or disable the plugin while a request is pending, its result cannot overwrite your new text. Errors preserve the original draft.
 
-Failures explain whether the cause is a timeout, missing model, authentication, exhausted quota, rate limiting, network/service errors, or invalid/truncated output. DSH terminal stream failures keep their original error category. Only safe error categories and HTTP status codes are displayed; provider response bodies and credentials are never forwarded. Cancelling by editing or switching sessions stays silent. The plugin adds no retries or extra model requests.
+Failures explain whether the cause is a timeout, missing model, authentication, exhausted quota, rate limiting, network/service errors, or invalid/truncated output. DSH terminal stream failures keep their original error category. Only safe error categories and HTTP status codes are displayed; provider response bodies and credentials are never forwarded. Cancelling by editing or switching sessions stays silent. Service errors are not automatically retried. A recognized confirmation section can trigger one additional model request to repair the spec, using the same configured service and shared timeout.
 
 The icon is disabled for empty drafts, drafts over 12,000 characters, active turns, and drafts containing structured file/session reference chips. Separate attachments are retained. Each click makes an additional model request and uses the service’s normal quota or billing.
 
@@ -93,7 +93,7 @@ Verified with **macOS DSH desktop 0.2.1-rc.2**. The media demo uses the matching
 
 ```sh
 npm run build  # JavaScript syntax checks
-npm test       # 31 behavior tests
+npm test       # behavior tests
 npm pack
 ```
 
