@@ -14,7 +14,7 @@ I built **dsh-next-step**, a plugin for DeepSeek Harness.
 
 After a reply finishes, a possible follow-up appears as gray text inside the composer. Press **Tab** to make it an editable draft. Press **Esc** to dismiss it, or write your own message.
 
-Already have a draft? Click the **magic-wand icon** in the composer toolbar to turn it into an actionable prompt. Known requirements stay explicit; missing details are listed as **To confirm**, without invented features or technical choices. The model is instructed to preserve your intent, language, and explicit constraints. Review the result, edit it, and send when ready. Errors keep the original draft, and a late response cannot overwrite new text you type while waiting.
+Already have a draft? Click the **magic-wand icon** in the composer toolbar to turn it into a well-described, actionable specification. Known requirements stay explicit; missing details are listed as **To confirm**, without invented features or technical choices. The model is instructed to preserve your intent, language, and explicit constraints. Review the result, edit it, and send when ready. Errors keep the original draft, and a late response cannot overwrite new text you type while waiting.
 
 Neither feature sends a message automatically. Both work on desktop and web, using your existing DSH model configuration and credentials. No separate API key is needed.
 

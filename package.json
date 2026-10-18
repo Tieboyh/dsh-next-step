@@ -1,6 +1,6 @@
 {
   "name": "dsh-next-step",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Inline next-message predictions and one-click prompt improvement for DeepSeek Harness",
   "type": "module",
   "license": "MIT",

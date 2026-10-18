@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.1
+
+- Prefer a compact, well-described specification for creation and implementation requests, with task-appropriate sections.
+- Separate known requirements, exclusions, behavior, constraints, and evidence-based acceptance criteria.
+- Put missing scope and acceptance decisions in To confirm; never fill them with assumed requirements.
+- Keep complete one-step requests concise and omit empty boilerplate.
+- Functional validation of this revision is delegated to the user; no additional automated or live tests were run.
+
+优先将开发类需求整理成可执行的 spec，未知范围与验收标准列为待确认项，不擅自补全。本版本按要求由用户验证。
+
 ## 0.4.0
 
 - Turn vague drafts into actionable requests with explicit goals, known requirements, and appropriate execution steps.
