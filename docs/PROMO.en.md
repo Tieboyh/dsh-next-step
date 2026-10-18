@@ -2,51 +2,58 @@
 
 ## Headline
 
-Your next step. One Tab away. — dsh-next-step
+Find your next step. Refine your prompt. — dsh-next-step
 
 ## One sentence
 
-dsh-next-step puts contextual next-message suggestions inside the DSH composer. Tab to accept. Esc to dismiss. You decide what to send.
+Inline next-message suggestions and one-click prompt improvement for DSH: Tab to accept a suggestion, click the wand to refine a draft, and decide what to send.
 
 ## Launch post
 
-I built **dsh-next-step**, a small plugin for DeepSeek Harness.
+I built **dsh-next-step**, a plugin for DeepSeek Harness.
 
-After a reply finishes, it suggests a useful follow-up based on the recent conversation. The suggestion appears as gray text right inside the composer.
+After a reply finishes, a possible follow-up appears as gray text inside the composer. Press **Tab** to make it an editable draft. Press **Esc** to dismiss it, or write your own message.
 
-Already have a draft? Click the **magic-wand icon** to improve its wording without changing your intent. The result stays editable and is never sent automatically.
+Already have a draft? Click the **magic-wand icon** in the composer toolbar to improve its wording. The model is instructed to preserve your intent, language, and explicit constraints. Review the result, edit it, and send when ready. Errors keep the original draft, and a late response cannot overwrite new text you type while waiting.
 
-Press **Tab** to make a prediction an editable draft. Press **Esc** to dismiss it, or just write your own message. Nothing is sent automatically.
+Neither feature sends a message automatically. Both work on desktop and web, using your existing DSH model configuration and credentials. No separate API key is needed.
 
-It works with DSH desktop and web and uses your existing model configuration and credentials. There is no separate API key to enter. Predictions stay active while the plugin is enabled; disable the plugin in DSH’s plugin manager to turn them off.
+Start and stop the plugin in **DSH’s Plugin Manager**. Enable dsh-next-step for both features; disable the plugin to stop. The composer has the action icon without a separate next-step toggle.
 
-Predictions make an additional model request and use your model service's normal quota or billing. If there is no useful next step, the plugin can stay quiet.
+Predictions and each improvement request use your configured model service’s normal quota or billing.
 
-Source, installation, and demos:
-[github.com/Tieboyh/dsh-next-step](https://github.com/Tieboyh/dsh-next-step)
+[Source, installation, and demos](https://github.com/Tieboyh/dsh-next-step) · [Downloads and videos](https://github.com/Tieboyh/dsh-next-step/releases/tag/v0.3.0)
 
 ## Short post
 
-Inline next-message predictions for DSH.
+Two small additions to DSH:
 
-**Tab to accept. Esc to dismiss. You send.**
+- A gray next-message suggestion. **Tab to accept. Esc to dismiss.**
+- A **magic-wand icon** to refine the draft you already wrote.
 
-Desktop + web. Your existing model setup.
+Everything stays editable. Nothing sends automatically. Desktop + web, controlled from Plugin Manager.
 
 [Source and installation](https://github.com/Tieboyh/dsh-next-step)
 
 ## Screenshot captions
 
-1. The suggestion appears inside the composer without changing the draft.
+1. Composer text detail: the suggestion has not changed the draft.
 2. Tab turns it into ordinary, editable text.
-3. Refine it before sending. The final instruction is yours.
-4. Esc dismisses the suggestion and leaves the composer empty.
+3. Add your own requirements before sending.
+4. Esc dismisses the current suggestion.
+5. Actual v0.3.0 UI: the magic-wand icon and an improved draft, still unsent.
+6. Plugin Manager: dsh-next-step is enabled; both features follow the plugin state.
+
+Prediction text details reuse crops from an earlier demo. The improvement screenshot comes from v0.3.0 verification; Plugin Manager comes from the current client. See [media provenance](MEDIA.md).
 
 ## Video caption
 
-Start your next message with a little momentum.
-See the suggestion, press Tab, make it yours, and send when you are ready.
+A little help with the next step. A clearer draft when you have one.
 
-#DeepSeekHarness #DSH #OpenSource #DeveloperTools
+**Tab to accept. Click the wand to refine. Edit, then send.**
 
-The demo uses synthetic conversations and scripted model responses to show the real plugin interaction.
+Enable dsh-next-step in Plugin Manager to get started.
+
+#DeepSeekHarness #DSH #PromptEngineering #OpenSource #DeveloperTools
+
+The 36-second film is an edit of real UI screenshots with synthetic examples and scripted model responses. It makes no live-model quality or speed claim. Model requests use the configured service’s normal quota or billing.

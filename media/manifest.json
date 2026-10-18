@@ -1,108 +1,125 @@
 {
-  "version": "0.2.0",
-  "provenance": "Actual DSH UI with scripted demo data; videos are screenshot-based motion edits.",
+  "version": "0.3.0",
+  "provenance": "Real UI screenshots; v0.3.0 optimization verification, current user-supplied Plugin Manager row, and older prediction text crops. Screenshot-based films, scripted model output. See docs/MEDIA.md.",
+  "activation": "Plugin Manager only; media renderer never starts DSH or loads plugins.",
   "assets": [
     {
       "path": "media/en/01-inline-prediction.png",
-      "bytes": 118406,
-      "sha256": "fea8647bc6698b0911e16989226e927b00920f7c3713569b061294aced560b48",
-      "width": 2400,
-      "height": 1500
+      "bytes": 7985,
+      "sha256": "4f73e3fb3bd78db509c6a91ed6e374cf872170dc10f84be0f3fe129529b749f3",
+      "width": 1440,
+      "height": 72
     },
     {
       "path": "media/en/02-tab-accepted.png",
-      "bytes": 118609,
-      "sha256": "44328ca2ed5aceacf0a1ad6a429b35a371817099a43bdf142c8d9c9afa9e2b86",
-      "width": 2400,
-      "height": 1500
+      "bytes": 8272,
+      "sha256": "99923821fd319ba65fe26e11de4561f76abd79aa317363dad104df3a4be21245",
+      "width": 1440,
+      "height": 72
     },
     {
       "path": "media/en/03-edit-before-send.png",
-      "bytes": 120839,
-      "sha256": "3b91809b20807871ef54d41acdddd8b119c0167b3d095ff48b849a5836484cf3",
-      "width": 2400,
-      "height": 1500
+      "bytes": 10188,
+      "sha256": "8b3eb5bf7973b3082cc67294166aca0f93b364913d2847e3011fc25329618fdb",
+      "width": 1440,
+      "height": 72
     },
     {
       "path": "media/en/04-esc-dismissed.png",
-      "bytes": 148396,
-      "sha256": "e2b0f40021b939e7f0e5a54f9d3d8df6e7a0eca9eacbddc68c4b714c21bb3470",
-      "width": 2400,
-      "height": 1500
+      "bytes": 7817,
+      "sha256": "a9ced92bc5db1cb131e88d422706efdb93bbdd4f1b6572c325b2605766555cea",
+      "width": 1440,
+      "height": 72
     },
     {
       "path": "media/en/cover-en.png",
-      "bytes": 106903,
-      "sha256": "bb47c25786b8894160620bf53c657b2cb7b4d9f7efec45a7a5d20f683f93a0a9",
+      "bytes": 166947,
+      "sha256": "12468028b8e961ae22945226f699e0c3780e309649ccb8635831ab12855a54ee",
       "width": 1920,
       "height": 1080
     },
     {
       "path": "media/en/demo-en.gif",
-      "bytes": 489404,
-      "sha256": "d34b8c6ae673440f920cfb4a821fcbf3088bd9151ac70ab4a3c2de6eb4d37368",
+      "bytes": 799401,
+      "sha256": "45166148b0a293fd55fdd33f958498d6830990842a3fed500585f5fbd27d8e77",
       "width": 800,
-      "height": 450
-    },
-    {
-      "path": "media/en/promo-en.mp4",
-      "bytes": 813975,
-      "sha256": "08167682041025117d0c15adb8b817bbd47c01ce029799a0f4e2ab55b6c7e5ff",
-      "width": 1920,
-      "height": 1080,
-      "fps": 24,
+      "height": 450,
       "durationSeconds": 28
     },
     {
+      "path": "media/en/promo-en.mp4",
+      "bytes": 1011013,
+      "sha256": "0ab8f39b3fb1bb68d615ef09b5cdbcac02d8a7969b045074afa4239a99730564",
+      "width": 1920,
+      "height": 1080,
+      "fps": 24,
+      "durationSeconds": 36
+    },
+    {
+      "path": "media/shared/05-prompt-optimized.png",
+      "bytes": 59512,
+      "sha256": "0f6e45c7ee5aabde3cc284c8c1f1bcbfd4a04fabf674aff3f67760c1876a8f44",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "media/shared/06-plugin-manager.png",
+      "bytes": 10452,
+      "sha256": "cfb7b4aab0883e92f6460edb89687b32aba44f9763b1eced2d6757a7223b53d9",
+      "width": 1960,
+      "height": 110
+    },
+    {
       "path": "media/zh/01-inline-prediction.png",
-      "bytes": 121056,
-      "sha256": "03cbe9bba8bffa11e4f206483b44885efc8c8e9a88981111889848cddbba16b0",
-      "width": 2400,
-      "height": 1500
+      "bytes": 9934,
+      "sha256": "21524a5757be6482a332373f2ce262aae78e6cb879c652f76602da3459601214",
+      "width": 1440,
+      "height": 72
     },
     {
       "path": "media/zh/02-tab-accepted.png",
-      "bytes": 121798,
-      "sha256": "5da2c0cc62387875a9b78f04aeac661b88753825687e979a6a238225306ec508",
-      "width": 2400,
-      "height": 1500
+      "bytes": 10645,
+      "sha256": "571df3847be4aad995ca5fe03f29695c9cc805965071db60b909e12e7b5a733f",
+      "width": 1440,
+      "height": 72
     },
     {
       "path": "media/zh/03-edit-before-send.png",
-      "bytes": 126042,
-      "sha256": "3d00d2f4a518d6fb3d08e3a5aa24841bce352f7f519090cbe828e404dce54333",
-      "width": 2400,
-      "height": 1500
+      "bytes": 14932,
+      "sha256": "f17e035820c26394d098e0984f9cc0d15c119d733ff3a9e3af8006c0792439c9",
+      "width": 1440,
+      "height": 72
     },
     {
       "path": "media/zh/04-esc-dismissed.png",
-      "bytes": 146379,
-      "sha256": "d76dd7084ddcc6abd87c3d951d3c546ebaf394865e50136f0c38662512476a90",
-      "width": 2400,
-      "height": 1500
+      "bytes": 10486,
+      "sha256": "2abc80d0fd3b7c545e2b0bee5b533956afa20d8fe3690d6bcfe9515c0d088ab8",
+      "width": 1440,
+      "height": 72
     },
     {
       "path": "media/zh/cover-zh.png",
-      "bytes": 111909,
-      "sha256": "ba57fe49fe3502dd3696a04f5ed506e129a2fe004c0a272da080fca48804d709",
+      "bytes": 182141,
+      "sha256": "f138f13f1f1731d246277088b662c9578bc0a8b73c7067b1c950455fb3a15abe",
       "width": 1920,
       "height": 1080
     },
     {
       "path": "media/zh/demo-zh.gif",
-      "bytes": 417606,
-      "sha256": "88d40ea38f6db529cbabfbccff383a48a5005e1c999d21ff96f0f99dcfa334a6",
+      "bytes": 757231,
+      "sha256": "1f005fcfd7cf2c453e3ee640c0ac0278e5da98aa0c0a2231ff76e2fab7acf839",
       "width": 800,
-      "height": 450
+      "height": 450,
+      "durationSeconds": 28
     },
     {
       "path": "media/zh/promo-zh.mp4",
-      "bytes": 786924,
-      "sha256": "20d9dd800496356311d9f398ee4499b3b226abfb5beef956615a020d2c3ebe24",
+      "bytes": 931139,
+      "sha256": "1ca8fc77b55c20e2d1df22db338cfc30594095f2ecd0fd9edc0275c25279b588",
       "width": 1920,
       "height": 1080,
       "fps": 24,
-      "durationSeconds": 28
+      "durationSeconds": 36
     }
   ]
 }

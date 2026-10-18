@@ -1,16 +1,16 @@
 # dsh-next-step
 
-**下一步，按下 Tab。**
+**接上下一步。写清你的指令。**
 
 [English](README.md) · [下载安装包](https://github.com/Tieboyh/dsh-next-step/releases/latest) · [中文宣传视频](media/zh/promo-zh.mp4) · [English video](media/en/promo-en.mp4)
 
 ![dsh-next-step：输入框里的下一步建议](media/zh/cover-zh.png)
 
-为 **DeepSeek Harness 桌面端和 Web 端**制作的社区插件。回复结束后，下一条消息的建议会以灰字出现在输入框里。按 **Tab** 变成可编辑草稿，再由你决定是否发送。
+为 **DeepSeek Harness 桌面端和 Web 端**制作的社区插件。回复结束后，下一条消息的建议会以灰字出现在输入框里。按 **Tab** 变成可编辑草稿，再由你决定是否发送。已有草稿时，点击魔法棒图标优化提示词，检查后再发送。
 
 ## 看看实际交互
 
-[![查看插件演示](media/zh/demo-zh.gif)](https://github.com/Tieboyh/dsh-next-step/releases/download/v0.2.0/promo-zh.mp4)
+[![查看插件演示](media/zh/demo-zh.gif)](https://github.com/Tieboyh/dsh-next-step/releases/download/v0.3.0/promo-zh.mp4)
 
 - **建议就在输入框里**：沿用原生字体和行高，不额外占一块面板。
 - **一键优化提示词**：写好草稿后，点击魔法棒图标优化表述，保留原意；结果仍可编辑，不自动发送。
@@ -20,32 +20,25 @@
 - **随插件启用**：输入框没有独立开关。要关闭建议，请在 DSH 插件管理中停用插件。
 - **沿用现有模型**：复用 DSH 已配置的模型与凭据，无需另外填写 API Key。
 
-| 输入框内的灰字建议 | Tab 接受后的草稿 |
-| --- | --- |
-| ![灰字建议](media/zh/01-inline-prediction.png) | ![接受后仍可编辑](media/zh/02-tab-accepted.png) |
+![魔法棒图标与优化后的可编辑草稿，尚未发送](media/shared/05-prompt-optimized.png)
 
-[更多中文截图](media/zh/) · [英文截图](media/en/)
+| 灰字文字细节 | Tab 接受后的文字 |
+| --- | --- |
+| ![灰字建议尚未写入草稿](media/zh/01-inline-prediction.png) | ![接受后仍可编辑](media/zh/02-tab-accepted.png) |
+
+![插件管理中已启用 dsh-next-step](media/shared/06-plugin-manager.png)
+
+优化画面来自 v0.3.0 实际验证；灰字细节为早期演示的文字区域裁切，均不展示旧开关。[素材来源](docs/MEDIA.md) · [更多素材](media/)
 
 ## 安装
 
 无需编译，无运行时 npm 依赖。
 
-**桌面端：**下载[源码压缩包](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.3.0.zip)，解压后，在 DSH 插件管理页添加该插件目录。
+1. 下载[源码压缩包](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.3.0.zip)并解压。
+2. 在 DSH **插件管理**中添加解压后的插件目录。
+3. 在插件管理中启用 **dsh-next-step**。需要关闭时，在同一处停用插件。
 
-macOS 也可以使用桌面应用自带的 CLI：
-
-```sh
-'/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh' \
-  plugin --profile desktop add link:/absolute/path/to/dsh-next-step
-```
-
-**Web 端：**直接安装固定版本：
-
-```sh
-dsh plugin --profile web add 'dsh-next-step@github:Tieboyh/dsh-next-step#v0.3.0'
-```
-
-本地开发可改用 `link:/absolute/path/to/dsh-next-step`。插件自带 bundle patch，会自动注册；无法热加载的环境刷新或重启 DSH 即可。
+两项功能都随插件启停，输入框没有独立开关。已安装的本地目录可在更新后通过插件管理重新加载；无需从其他入口另行启动。
 
 ## 优化当前草稿
 

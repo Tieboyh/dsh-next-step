@@ -1,41 +1,50 @@
 # Media / 素材说明
 
-## What is included
+## Included in this refresh
 
-- Two 28-second promotional videos: Simplified Chinese and English, 1920×1080, 24 fps, H.264/AAC MP4.
-- Two GIF previews for GitHub READMEs.
-- Two 1920×1080 launch covers.
-- Eight original 2400×1500 screenshots: inline prediction, Tab acceptance, editing, and Esc dismissal, in Chinese and English.
+- Two 36-second promotional films, Chinese and English: 1920×1080, 24 fps, H.264/AAC MP4.
+- Two 28-second GIF previews and two 1920×1080 covers.
+- Eight composer text-detail crops, four per language.
+- One original v0.3.0 prompt-improvement verification screenshot, 1440×1000.
+- One crop of the user-supplied Plugin Manager screenshot showing only dsh-next-step.
 - Chinese and English launch posts in this directory.
 
-## Provenance
+The current media contains no old composer next-step toggle. The Plugin Manager switch is the actual enable/disable control and is intentionally shown.
 
-The screenshots were captured from the actual **DSH 0.2.1-rc.2 web frontend** running `dsh-next-step 0.2.0` in an isolated local profile. The UI and plugin behaviors are real. The conversation and model output are fixed synthetic examples supplied by a demo-only scripted provider; they do not measure live-model suggestion quality or speed.
+## Sources and limits
 
-The provider is not included in the distributed plugin. Normal installations call the user's configured model service.
+All UI pixels come from real DSH screens. The film is a screenshot-based edit with title cards, crops, crossfades, and an annotation around the actual magic-wand icon. It is not a continuous recording of a request completing. The original draft appears as an editorial text label, taken from the verification input; the improved draft is visible in the actual verification screenshot. The English draft in that screenshot is retained in both language versions rather than replaced with invented UI text.
 
-The promotional films use edited crops of those screenshots, title cards, crossfades, and keyboard callouts. They are screenshot-based product films, not continuous desktop recordings. The original screenshot files are preserved without annotations or retouching. The sound consists of simple synthesized chimes created for this project, with no third-party music or voice-over.
+| Files | Source |
+| --- | --- |
+| `media/en/01…04`, `media/zh/01…04` | Text-only crops of the earlier DSH 0.2.1-rc.2 / plugin v0.2.0 demo. Crop rectangle: `(520,1308,1960,1380)` from the original 2400×1500 image. These show the retained prediction/Tab/edit/Esc interactions and exclude the entire old control row. They are not new v0.3.0 full-interface captures. |
+| `media/shared/05-prompt-optimized.png` | Unretouched v0.3.0 verification screenshot from the actual DSH 0.2.1-rc.2 frontend. Shows a first unsent draft after optimization and the real magic-wand icon, without an independent feature toggle. |
+| `media/shared/06-plugin-manager.png` | Crop `(20,235,1980,345)` of the user-supplied current client screenshot. Only this plugin’s row is retained. The user enabled it through Plugin Manager. |
 
-No private conversations, account credentials, API keys, or local authentication URLs are included. These assets show v0.2.0. Version 0.2.1 removes the composer toggle visible in the screenshots; predictions are now controlled only by enabling or disabling the plugin. Version 0.3.0 adds a prompt-improvement icon that is not shown in these older assets.
+The earlier demo and the v0.3.0 verification used isolated local test profiles with a scripted demo provider and synthetic conversations. They make no claim about live-model quality or response speed. The demo provider is not distributed with the plugin. Normal use calls the user’s configured model service and consumes its normal quota or billing.
 
-## Re-render the films
+No DSH instance or plugin was started or reconfigured for this media refresh. Existing captures were reused to respect the requirement that plugin activation happens only through the client’s Plugin Manager. No private chats, credentials, authentication links, or unrelated plugin rows are published.
 
-Install Pillow and ffmpeg, then run from any working directory:
+Sound consists of simple synthesized chimes created for this project. There is no third-party music or voice-over.
+
+## Re-render
+
+With Pillow and ffmpeg installed:
 
 ```sh
 python tools/render-media.py --lang both --work-dir /path/to/scratch-directory
 ```
 
-The renderer uses the screenshot files under `media/en` and `media/zh`. On platforms without the default fonts, set `PROMO_FONT` and `PROMO_FONT_CJK` to installed TrueType/OpenType font paths.
+The renderer reads the checked-in image files and never starts DSH or loads a plugin. Set `PROMO_FONT` and `PROMO_FONT_CJK` if the default fonts are unavailable. `media/manifest.json` records the dimensions, sizes, and SHA-256 hashes of all current media assets.
 
 ## 中文说明
 
-截图来自隔离环境中的真实 DSH 前端和真实插件，使用固定示例会话与脚本化模型响应。宣传视频由原始截图裁切、字幕卡、键盘提示和转场组成，并非连续录屏；截图原文件保持不变。示例不代表真实模型的建议质量或响应速度。
+本次素材展示“Tab 接受灰字建议”“魔法棒优化草稿”“在插件管理中统一启停”。旧版输入框里的独立开关不再出现在当前素材中；插件管理页的开关是实际启停入口，因此保留展示。
 
-演示用模型未随插件发布。正常使用时，插件调用用户在 DSH 中配置的模型服务，并消耗该服务对应的额度。
+灰字、接受、编辑和 Esc 四种文字细节复用早期真实截图的裁切，完整排除了旧工具栏，并非新拍的 v0.3.0 全界面截图。优化画面使用已经保存的 v0.3.0 真实验证截图；插件管理使用用户提供的当前客户端截图，仅保留 dsh-next-step 所在一行。新版优化截图保持英文草稿原文，中英文视频只翻译画面外的说明，不替换界面文字。
 
-现有素材展示 v0.2.0；v0.2.1 已删除图中输入框旁的独立开关，建议只随插件启用或停用。v0.3.0 新增的提示词优化图标未包含在这些旧版素材中。
+视频通过这些真实截图、文字卡和转场制作，不是连续录屏。原始草稿作为画面外的文字展示，来自验证时的输入；优化结果来自实际截图。示例模型响应为脚本化固定数据，不代表真实模型的质量或响应速度。
 
-音效为本项目合成的简单提示音，没有第三方音乐或配音。素材中不包含私人聊天、凭据或本地认证链接。
+为遵守“只通过插件管理启停”的要求，本次更新没有另起 DSH 实例、直接加载插件或改动客户端启用状态。没有公开私人会话、凭据或本地认证链接。生成建议和优化草稿都会正常消耗已配置模型服务的额度。
 
-DeepSeek Harness UI and trademarks belong to their respective owners. This is a community plugin, not an official DeepSeek or OpenAI product.
+DeepSeek Harness UI and trademarks belong to their respective owners. Community plugin; not an official DeepSeek or OpenAI product.

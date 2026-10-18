@@ -1,16 +1,16 @@
 # dsh-next-step
 
-**Your next step. One Tab away.**
+**Find your next step. Refine your prompt.**
 
 [简体中文](README.zh-CN.md) · [Download](https://github.com/Tieboyh/dsh-next-step/releases/latest) · [English video](media/en/promo-en.mp4) · [中文视频](media/zh/promo-zh.mp4)
 
 ![dsh-next-step — inline predictions for DeepSeek Harness](media/en/cover-en.png)
 
-A community plugin for **DeepSeek Harness desktop and web**. After a reply finishes, a suggested next message appears in gray inside the composer. Press **Tab** to turn it into an editable draft. You decide what to send.
+A community plugin for **DeepSeek Harness desktop and web**. After a reply finishes, a suggested next message appears in gray inside the composer. Press **Tab** to turn it into an editable draft. Have a draft already? Click the magic-wand icon to refine it, then review and send when ready.
 
 ## See it work
 
-[![Watch the demo](media/en/demo-en.gif)](https://github.com/Tieboyh/dsh-next-step/releases/download/v0.2.0/promo-en.mp4)
+[![Watch the demo](media/en/demo-en.gif)](https://github.com/Tieboyh/dsh-next-step/releases/download/v0.3.0/promo-en.mp4)
 
 - **Inline suggestions:** same composer, same font, no extra suggestion panel.
 - **One-click prompt improvement:** write a draft, then click the magic-wand icon to clarify its wording while preserving your intent. Review and edit the result before sending.
@@ -20,32 +20,25 @@ A community plugin for **DeepSeek Harness desktop and web**. After a reply finis
 - **Plugin-controlled:** predictions are active whenever the plugin is enabled. To turn them off, disable the plugin in DSH’s plugin manager.
 - **Existing model setup:** uses DSH's configured provider and credentials. No separate API key to enter.
 
-| Inline prediction | Accepted draft |
-| --- | --- |
-| ![A gray prediction inside the composer](media/en/01-inline-prediction.png) | ![Tab turns the suggestion into editable text](media/en/02-tab-accepted.png) |
+![The real magic-wand icon and an improved, unsent draft](media/shared/05-prompt-optimized.png)
 
-[More screenshots](media/en/) · [Chinese screenshots](media/zh/)
+| Prediction text detail | Accepted text detail |
+| --- | --- |
+| ![Gray suggestion before acceptance](media/en/01-inline-prediction.png) | ![Tab makes an editable draft](media/en/02-tab-accepted.png) |
+
+![dsh-next-step enabled in Plugin Manager](media/shared/06-plugin-manager.png)
+
+The improvement screen comes from v0.3.0 verification. Prediction text details are crops of an earlier demo; the old toggle is excluded. [Media sources](docs/MEDIA.md) · [All assets](media/)
 
 ## Install
 
 No build step or runtime npm dependencies are required.
 
-**Desktop:** download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.3.0.zip), extract it, and add the extracted plugin directory from DSH's plugin manager.
+1. Download the [source archive](https://github.com/Tieboyh/dsh-next-step/archive/refs/tags/v0.3.0.zip) and extract it.
+2. Add the extracted plugin directory in DSH’s **Plugin Manager**.
+3. Enable **dsh-next-step** there. Use the same manager to disable it.
 
-On macOS, the desktop app's bundled CLI also supports a local directory:
-
-```sh
-'/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh' \
-  plugin --profile desktop add link:/absolute/path/to/dsh-next-step
-```
-
-**Web:** install the tagged GitHub version:
-
-```sh
-dsh plugin --profile web add 'dsh-next-step@github:Tieboyh/dsh-next-step#v0.3.0'
-```
-
-For local development, use `link:/absolute/path/to/dsh-next-step` instead. The bundle patch registers the plugin automatically. Reload or restart DSH if your environment does not apply plugin changes live.
+Both features follow the plugin state, with no separate composer toggle. Reload an updated local installation through Plugin Manager; no separate startup entry point is needed.
 
 ## Improve a draft
 
