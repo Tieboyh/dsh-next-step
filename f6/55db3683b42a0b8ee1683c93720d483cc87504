@@ -1,0 +1,30 @@
+CHANGELOG.md
+  h_2e09cbd7ad2696 1-9
+README.md
+  h_2e09cbd7ad2696 19,32,44,86
+README.zh-CN.md
+  h_2e09cbd7ad2696 19,32,44,86
+client.js
+  h_2e09cbd7ad2696 22,40,112
+docs/MEDIA.md
+  h_2e09cbd7ad2696 19,37-38
+docs/PROMO.en.md
+  h_2e09cbd7ad2696 19
+docs/PROMO.zh-CN.md
+  h_2e09cbd7ad2696 19
+package.json
+  h_2e09cbd7ad2696 3
+tests/client.test.js
+  h_2e09cbd7ad2696 10,46,73,109-120
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f655db3683b42a0b8ee1683c93720d483cc87504",
+  "prompts": {},
+  "humans": {
+    "h_2e09cbd7ad2696": {
+      "author": "Tieboyh <272408466+Tieboyh@users.noreply.github.com>"
+    }
+  }
+}
